@@ -1,11 +1,8 @@
 import { DEFAULT_FAVORITE_RELAYS } from '@/constants'
 import { getRelaySetFromEvent } from '@/lib/event-metadata'
-import { checkAlgoRelay } from '@/lib/relay'
 import { isWebsocketUrl, normalizeUrl } from '@/lib/url'
-import client from '@/services/client.service'
 import indexedDb from '@/services/indexed-db.service'
 import storage from '@/services/local-storage.service'
-import relayInfoService from '@/services/relay-info.service'
 import { TFeedInfo, TFeedType } from '@/types'
 import { kinds } from 'nostr-tools'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
@@ -103,9 +100,6 @@ export function FeedProvider({ children }: { children: React.ReactNode }) {
       setRelayUrls([normalizedUrl])
       storage.setFeedInfo(newFeedInfo, pubkey)
       setIsReady(true)
-
-      const relayInfo = await relayInfoService.getRelayInfo(normalizedUrl)
-      client.setCurrentRelayUrls(checkAlgoRelay(relayInfo) ? [] : [normalizedUrl])
       return
     }
     if (feedType === 'relays') {
@@ -135,11 +129,6 @@ export function FeedProvider({ children }: { children: React.ReactNode }) {
         setRelayUrls(relaySet.relayUrls)
         storage.setFeedInfo(newFeedInfo, pubkey)
         setIsReady(true)
-
-        const relayInfos = await relayInfoService.getRelayInfos(relaySet.relayUrls)
-        client.setCurrentRelayUrls(
-          relaySet.relayUrls.filter((_, i) => !relayInfos[i] || !checkAlgoRelay(relayInfos[i]))
-        )
       }
       setIsReady(true)
       return
