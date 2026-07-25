@@ -1,5 +1,9 @@
 import { BoundedMap } from '@/lib/bounded-map'
-import { getEventKey } from '@/lib/event'
+import {
+  getEventFeedTimestamp,
+  getEventKey,
+  sortRevisionOrderedFeedEventsDesc
+} from '@/lib/event'
 import { TFeedSubRequest } from '@/types'
 import dayjs from 'dayjs'
 import { Event } from 'nostr-tools'
@@ -82,12 +86,13 @@ class UserAggregationService {
       if (events.length === 0) {
         return
       }
+      const sortedEvents = sortRevisionOrderedFeedEventsDesc(events)
 
       aggregations.push({
         pubkey,
-        events: events,
-        count: events.length,
-        lastEventTime: events[0].created_at
+        events: sortedEvents,
+        count: sortedEvents.length,
+        lastEventTime: getEventFeedTimestamp(sortedEvents[0])
       })
     })
 

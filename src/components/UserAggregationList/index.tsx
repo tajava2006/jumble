@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import UserAvatar, { SimpleUserAvatar, UserAvatarSkeleton } from '@/components/UserAvatar'
 import Username, { SimpleUsername } from '@/components/Username'
-import { isMentioningMutedUsers } from '@/lib/event'
+import { getEventFeedTimestamp, isMentioningMutedUsers } from '@/lib/event'
 import { toNote, toUserAggregationDetail } from '@/lib/link'
 import { mergeTimelines } from '@/lib/timeline'
 import { cn, isTouchDevice } from '@/lib/utils'
@@ -273,7 +273,7 @@ const UserAggregationList = forwardRef<
         const results = await Promise.allSettled(
           events.map(async (evt) => {
             if (evt.pubkey === currentPubkey) return null
-            if (evt.created_at < since) return null
+            if (getEventFeedTimestamp(evt) < since) return null
             if (isEventDeleted(evt)) return null
             if (filterMutedNotes && mutePubkeySet.has(evt.pubkey)) return null
             if (

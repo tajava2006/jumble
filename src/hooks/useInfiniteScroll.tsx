@@ -6,6 +6,11 @@ export interface UseInfiniteScrollOptions<T> {
    */
   items: T[]
   /**
+   * Number of items from the start of the array that are currently eligible
+   * for display. Defaults to the full array length.
+   */
+  itemCount?: number
+  /**
    * Whether to initially show all items or use pagination
    * @default false
    */
@@ -32,6 +37,7 @@ export interface UseInfiniteScrollOptions<T> {
 
 export function useInfiniteScroll<T>({
   items,
+  itemCount,
   showAllInitially = false,
   showCount: initialShowCount = 10,
   onLoadMore,
@@ -42,6 +48,7 @@ export function useInfiniteScroll<T>({
     threshold: 0
   }
 }: UseInfiniteScrollOptions<T>) {
+  const effectiveItemCount = itemCount ?? items.length
   const [hasMore, setHasMore] = useState(true)
   const [showCount, setShowCount] = useState(showAllInitially ? Infinity : initialShowCount)
   const [loading, setLoading] = useState(false)
@@ -50,7 +57,7 @@ export function useInfiniteScroll<T>({
     loading,
     hasMore,
     showCount,
-    itemsLength: items.length,
+    itemsLength: effectiveItemCount,
     initialLoading
   })
 
@@ -58,7 +65,7 @@ export function useInfiniteScroll<T>({
     loading,
     hasMore,
     showCount,
-    itemsLength: items.length,
+    itemsLength: effectiveItemCount,
     initialLoading
   }
 
@@ -122,10 +129,13 @@ export function useInfiniteScroll<T>({
   }, [loadMore, observerOptions])
 
   const visibleItems = useMemo(() => {
-    return showAllInitially ? items : items.slice(0, showCount)
-  }, [items, showAllInitially, showCount])
+    return items.slice(
+      0,
+      showAllInitially ? effectiveItemCount : Math.min(showCount, effectiveItemCount)
+    )
+  }, [items, effectiveItemCount, showAllInitially, showCount])
 
-  const shouldShowLoadingIndicator = hasMore || showCount < items.length || loading
+  const shouldShowLoadingIndicator = hasMore || showCount < effectiveItemCount || loading
 
   return {
     visibleItems,

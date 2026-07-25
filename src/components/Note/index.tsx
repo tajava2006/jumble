@@ -1,6 +1,6 @@
 import { useSecondaryPage } from '@/PageManager'
 import { ExtendedKind } from '@/constants'
-import { getEventAuthorPubkey, getParentStuff } from '@/lib/event'
+import { getEventAuthorPubkey, getEventFeedTimestamp, getParentStuff } from '@/lib/event'
 import { toExternalContent, toNote } from '@/lib/link'
 import { generateBech32IdFromATag, generateBech32IdFromETag, tagNameEquals } from '@/lib/tag'
 import { useScreenSize } from '@/providers/ScreenSizeProvider'
@@ -56,14 +56,7 @@ export default function Note({
     const eTag = event.tags.findLast(tagNameEquals('e'))
     return eTag ? generateBech32IdFromETag(eTag) : undefined
   }, [event])
-  const displayTimestamp = useMemo(() => {
-    if (event.kind === kinds.LongFormArticle) {
-      const publishedAt = event.tags.find(tagNameEquals('published_at'))?.[1]
-      const parsed = publishedAt ? parseInt(publishedAt, 10) : NaN
-      if (Number.isFinite(parsed)) return parsed
-    }
-    return event.created_at
-  }, [event])
+  const displayTimestamp = useMemo(() => getEventFeedTimestamp(event), [event])
 
   return (
     <div className={className}>
