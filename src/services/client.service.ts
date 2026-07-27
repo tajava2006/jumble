@@ -940,17 +940,22 @@ class ClientService extends EventTarget {
     let eventId = /^[0-9a-f]{64}$/.test(id) ? id : undefined
     let coordinate: string | undefined
     if (!eventId) {
-      const { type, data } = nip19.decode(id)
-      switch (type) {
-        case 'note':
-          eventId = data
-          break
-        case 'nevent':
-          eventId = data.id
-          break
-        case 'naddr':
-          coordinate = getReplaceableCoordinate(data.kind, data.pubkey, data.identifier)
-          break
+      if (/^\d+:[0-9a-f]{64}:/.test(id)) {
+        // Raw replaceable coordinate (kind:pubkey:d-tag), as found in a/A tags
+        coordinate = id
+      } else {
+        const { type, data } = nip19.decode(id)
+        switch (type) {
+          case 'note':
+            eventId = data
+            break
+          case 'nevent':
+            eventId = data.id
+            break
+          case 'naddr':
+            coordinate = getReplaceableCoordinate(data.kind, data.pubkey, data.identifier)
+            break
+        }
       }
     }
     if (coordinate) {

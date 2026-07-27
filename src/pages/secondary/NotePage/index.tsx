@@ -87,25 +87,26 @@ const NotePage = forwardRef<TPageRef, { id?: string; index?: number }>(({ id, in
   const { isFetching: isFetchingParentEvent, event: parentEvent } = useFetchEvent(parentEventId)
   const [expanded, setExpanded] = useState(false)
   const currentKey = useMemo(() => (event ? getEventKey(event) : ''), [event])
-  const rootKey = useMemo(() => (rootEvent ? getEventKey(rootEvent) : ''), [rootEvent])
   const opPubkey = useMemo(
     () =>
       (rootEvent ? getEventAuthorPubkey(rootEvent) : undefined) ??
       (!rootEventId && !rootITag && event ? getEventAuthorPubkey(event) : undefined),
     [rootEvent, rootEventId, rootITag, event]
   )
-  const ancestorChain = useAncestorChain(currentKey, rootKey)
+  // Use the tag-derived keys (known before the events load) so the chain can be
+  // built — and subscribed to — before rootEvent/parentEvent are fetched.
+  const ancestorChain = useAncestorChain(currentKey, rootTagKey ?? '')
   const canExpand = !!parentEventId
   const fullChain = useMemo(() => {
     const chain = Array.from(new Set(ancestorChain))
-    if (rootEvent && !chain.includes(rootEvent.id)) {
-      chain.unshift(rootEvent.id)
+    if (rootTagKey && !chain.includes(rootTagKey)) {
+      chain.unshift(rootTagKey)
     }
-    if (parentEvent && !chain.includes(parentEvent.id)) {
-      chain.push(parentEvent.id)
+    if (parentTagKey && !chain.includes(parentTagKey)) {
+      chain.push(parentTagKey)
     }
     return chain
-  }, [rootEvent, parentEvent, ancestorChain])
+  }, [rootTagKey, parentTagKey, ancestorChain])
   const layoutRef = useRef<TPageRef>(null)
 
   useImperativeHandle(
@@ -355,7 +356,7 @@ function ChainItem({
     return <ChainItemSkeleton isFirst={isFirst} />
   }
   if (!event) {
-    return null
+    return <ChainItemNotFound eventId={eventId} isFirst={isFirst} />
   }
 
   return (
@@ -406,6 +407,33 @@ function ChainItem({
           <NoteContent className="mt-2" event={event} />
           <StuffStats className="mt-2" stuff={event} />
         </div>
+      </div>
+    </ClickableCard>
+  )
+}
+
+function ChainItemNotFound({ eventId, isFirst }: { eventId: string; isFirst: boolean }) {
+  const { t } = useTranslation()
+  const { push } = useSecondaryPage()
+  const { autoLoadProfilePicture } = useContentPolicy()
+
+  return (
+    <ClickableCard
+      className={cn(
+        'clickable hover:bg-accent/30 relative px-4 py-3 transition-colors duration-200',
+        !autoLoadProfilePicture && 'border-b'
+      )}
+      onClick={() => push(toNote(eventId))}
+    >
+      {autoLoadProfilePicture && !isFirst && (
+        <div className="bg-border absolute inset-s-8.75 top-0 z-0 h-2 w-0.5" />
+      )}
+      {autoLoadProfilePicture && (
+        <div className="bg-border absolute inset-s-8.75 top-14.5 bottom-0 z-0 w-0.5" />
+      )}
+      <div className="flex items-center gap-2">
+        {autoLoadProfilePicture && <div className="bg-muted h-10 w-10 shrink-0 rounded-full" />}
+        <div className="text-muted-foreground text-sm">{`[${t('Note not found')}]`}</div>
       </div>
     </ClickableCard>
   )
