@@ -101,14 +101,16 @@ const NotePage = forwardRef<TPageRef, { id?: string; index?: number }>(({ id, in
   const canExpand = !!parentEventId
   const fullChain = useMemo(() => {
     const chain = Array.from(new Set(ancestorChain))
-    if (rootTagKey && !chain.includes(rootTagKey)) {
+    // Only keys that resolve to actual events can render as ChainItem — an
+    // external root (e.g. a URL) is displayed by ExternalRoot above instead.
+    if (rootEventId && rootTagKey && !chain.includes(rootTagKey)) {
       chain.unshift(rootTagKey)
     }
-    if (parentTagKey && !chain.includes(parentTagKey)) {
+    if (parentEventId && parentTagKey && !chain.includes(parentTagKey)) {
       chain.push(parentTagKey)
     }
     return chain
-  }, [rootTagKey, parentTagKey, ancestorChain])
+  }, [rootEventId, rootTagKey, parentEventId, parentTagKey, ancestorChain])
   const layoutRef = useRef<TPageRef>(null)
 
   useImperativeHandle(
@@ -219,7 +221,7 @@ const NotePage = forwardRef<TPageRef, { id?: string; index?: number }>(({ id, in
               </div>
             )}
         {canExpand && <ExpandThreadButton expanded={expanded} onToggle={handleToggleExpand} />}
-        <div className={cn('relative px-4 pt-3', canExpand && 'pt-1')}>
+        <div className={cn('relative px-4', canExpand || rootITag ? 'pt-1' : 'pt-3')}>
           {reposters && <RepostDescription reposters={reposters} />}
           <Note
             key={`note-${event.id}`}
@@ -274,7 +276,7 @@ function ExternalRoot({ value }: { value: string }) {
         <div className="truncate">{value}</div>
       </Card>
       {autoLoadProfilePicture ? (
-        <div className="bg-border ms-5 h-2 w-px" />
+        <div className="bg-border ms-4.75 h-3 w-0.5" />
       ) : (
         <div className="h-2" />
       )}
