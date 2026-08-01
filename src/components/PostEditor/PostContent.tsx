@@ -157,7 +157,7 @@ const PostContent = forwardRef<TPostContentHandle, Props>(function PostContent(
       relays: []
     }
   )
-  const [minPow, setMinPow] = useState(initialDraft?.minPow ?? 0)
+  const [minPow, setMinPow] = useState(initialDraft?.minPow ?? storage.getDefaultMinPow() ?? 0)
   const userDismissedProtected = useRef(false)
   const handleProtectedSuggestionChange = useCallback((suggested: boolean) => {
     if (suggested && !userDismissedProtected.current) {
@@ -669,7 +669,7 @@ const PostContent = forwardRef<TPostContentHandle, Props>(function PostContent(
       {showMoreOptions && (
         <>
           <div className="bg-border h-px" />
-          <div className="px-5 py-3 sm:px-6">
+          <div className="p-5 sm:p-6">
             <PostOptions
               posting={false}
               show={showMoreOptions}

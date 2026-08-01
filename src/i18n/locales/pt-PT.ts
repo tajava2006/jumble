@@ -1153,6 +1153,7 @@ export default {
       'Utiliza uma nova identidade Nostr de utilização única. A sua conta não aparecerá no evento, mas os relays e observadores da rede ainda poderão associar a sua atividade.',
     'One-time identity': 'Identidade de utilização única',
     'Try loading more': 'Tentar carregar mais',
-    'Show less': 'Mostrar menos'
+    'Show less': 'Mostrar menos',
+    'Remember this difficulty': 'Memorizar esta dificuldade'
   }
 }

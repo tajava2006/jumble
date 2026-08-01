@@ -1154,6 +1154,7 @@ export default {
       'Używa nowej, jednorazowej tożsamości Nostr. Twoje konto nie pojawi się w zdarzeniu, ale przekaźniki i obserwatorzy sieci nadal mogą powiązać Twoją aktywność.',
     'One-time identity': 'Jednorazowa tożsamość',
     'Try loading more': 'Spróbuj wczytać więcej',
-    'Show less': 'Pokaż mniej'
+    'Show less': 'Pokaż mniej',
+    'Remember this difficulty': 'Zapamiętaj ten poziom trudności'
   }
 }

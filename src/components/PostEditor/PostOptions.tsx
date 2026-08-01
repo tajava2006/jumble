@@ -2,7 +2,7 @@ import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import storage from '@/services/local-storage.service'
-import { Dispatch, SetStateAction } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function PostOptions({
@@ -25,6 +25,7 @@ export default function PostOptions({
   setMinPow: Dispatch<SetStateAction<number>>
 }) {
   const { t } = useTranslation()
+  const [rememberPow, setRememberPow] = useState(storage.getDefaultMinPow() !== null)
 
   if (!show) return null
 
@@ -35,6 +36,18 @@ export default function PostOptions({
 
   const onNsfwChange = (checked: boolean) => {
     setIsNsfw(checked)
+  }
+
+  const onMinPowChange = (pow: number) => {
+    setMinPow(pow)
+    if (rememberPow) {
+      storage.setDefaultMinPow(pow)
+    }
+  }
+
+  const onRememberPowChange = (checked: boolean) => {
+    setRememberPow(checked)
+    storage.setDefaultMinPow(checked ? minPow : null)
   }
 
   return (
@@ -49,7 +62,7 @@ export default function PostOptions({
             disabled={posting}
           />
         </div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-muted-foreground text-xs">
           {t('Show others this was sent via Jumble')}
         </div>
       </div>
@@ -64,12 +77,28 @@ export default function PostOptions({
         />
       </div>
 
-      <div className="grid gap-4 pb-4">
-        <Label>{t('Proof of Work (difficulty {{minPow}})', { minPow })}</Label>
+      <div className="grid gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <Label>{t('Proof of Work (difficulty {{minPow}})', { minPow })}</Label>
+          <div className="ms-auto flex shrink-0 items-center gap-2">
+            <Label
+              htmlFor="remember-pow"
+              className="text-muted-foreground cursor-pointer font-normal"
+            >
+              {t('Remember this difficulty')}
+            </Label>
+            <Switch
+              id="remember-pow"
+              checked={rememberPow}
+              onCheckedChange={onRememberPowChange}
+              disabled={posting}
+            />
+          </div>
+        </div>
         <Slider
           defaultValue={[0]}
           value={[minPow]}
-          onValueChange={([pow]) => setMinPow(pow)}
+          onValueChange={([pow]) => onMinPowChange(pow)}
           max={28}
           step={1}
           disabled={posting}

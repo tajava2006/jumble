@@ -1135,6 +1135,7 @@ export default {
       'Uses a new one-time Nostr identity. Your account will not appear in the event, but relays and network observers may still correlate your activity.',
     'One-time identity': 'One-time identity',
     'Try loading more': 'Try loading more',
-    'Show less': 'Show less'
+    'Show less': 'Show less',
+    'Remember this difficulty': 'Remember this difficulty'
   }
 }

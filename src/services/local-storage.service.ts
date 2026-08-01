@@ -75,6 +75,7 @@ class LocalStorageService {
   private quickReaction: boolean = false
   private quickReactionEmoji: string | TEmoji = '+'
   private addClientTag: boolean = false
+  private defaultMinPow: number | null = null
   private nsfwDisplayPolicy: TNsfwDisplayPolicy = NSFW_DISPLAY_POLICY.HIDE_CONTENT
   private defaultRelayUrls: string[] = BIG_RELAY_URLS
   private searchRelayUrls: string[] = SEARCHABLE_RELAY_URLS
@@ -335,6 +336,13 @@ class LocalStorageService {
 
     this.quickReaction = window.localStorage.getItem(StorageKey.QUICK_REACTION) === 'true'
     this.addClientTag = window.localStorage.getItem(StorageKey.ADD_CLIENT_TAG) === 'true'
+    const defaultMinPowStr = window.localStorage.getItem(StorageKey.DEFAULT_MIN_POW)
+    if (defaultMinPowStr !== null) {
+      const defaultMinPow = Number(defaultMinPowStr)
+      if (Number.isInteger(defaultMinPow) && defaultMinPow >= 0 && defaultMinPow <= 28) {
+        this.defaultMinPow = defaultMinPow
+      }
+    }
     const quickReactionEmojiStr =
       window.localStorage.getItem(StorageKey.QUICK_REACTION_EMOJI) ?? '+'
     if (quickReactionEmojiStr.startsWith('{')) {
@@ -1173,6 +1181,19 @@ class LocalStorageService {
   setAddClientTag(addClientTag: boolean) {
     this.addClientTag = addClientTag
     window.localStorage.setItem(StorageKey.ADD_CLIENT_TAG, addClientTag.toString())
+  }
+
+  getDefaultMinPow() {
+    return this.defaultMinPow
+  }
+
+  setDefaultMinPow(minPow: number | null) {
+    this.defaultMinPow = minPow
+    if (minPow === null) {
+      window.localStorage.removeItem(StorageKey.DEFAULT_MIN_POW)
+    } else {
+      window.localStorage.setItem(StorageKey.DEFAULT_MIN_POW, minPow.toString())
+    }
   }
 
   getQuickReactionEmoji() {

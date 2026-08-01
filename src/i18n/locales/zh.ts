@@ -1101,6 +1101,7 @@ export default {
       '使用一个新的一次性 Nostr 身份。事件中不会出现你的账号，但中继和网络观察者仍可能关联你的活动。',
     'One-time identity': '一次性身份',
     'Try loading more': '尝试加载更多',
-    'Show less': '收起'
+    'Show less': '收起',
+    'Remember this difficulty': '记住此难度'
   }
 }
