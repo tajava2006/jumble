@@ -75,8 +75,7 @@ export default function Collapsible({
       {shouldCollapse && expanded && showLessButton && (
         <div className="mt-2 flex justify-center">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="secondary"
             onClick={(e) => {
               e.stopPropagation()
               setExpanded(false)

@@ -1151,6 +1151,6 @@ export default {
       'Usa una nuova identità Nostr monouso. Il tuo account non apparirà nell’evento, ma i relay e gli osservatori della rete potrebbero comunque collegare la tua attività.',
     'One-time identity': 'Identità monouso',
     'Try loading more': 'Prova a caricarne altri',
-    'Show less': ''
+    'Show less': 'Mostra meno'
   }
 }
