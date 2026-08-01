@@ -15,6 +15,7 @@ import {
   sortRevisionOrderedFeedEventsDesc,
   sortRevisionOrderedFeedItemsDesc
 } from '@/lib/event'
+import { isRelayDisconnectReason } from '@/lib/relay'
 import { tagNameEquals } from '@/lib/tag'
 import { mergeTimelines } from '@/lib/timeline'
 import { useContentPolicy } from '@/providers/ContentPolicyProvider'
@@ -492,18 +493,7 @@ const NoteList = forwardRef<
             },
             onClose: (url, reason) => {
               if (!showRelayCloseReason) return
-              // ignore reasons from nostr-tools
-              if (
-                [
-                  'closed by caller',
-                  'relay connection errored',
-                  'relay connection closed',
-                  'pingpong timed out',
-                  'relay connection closed by us'
-                ].includes(reason)
-              ) {
-                return
-              }
+              if (isRelayDisconnectReason(reason)) return
 
               toast.error(`${url}: ${reason}`)
             }

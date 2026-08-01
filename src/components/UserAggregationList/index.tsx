@@ -5,6 +5,7 @@ import UserAvatar, { SimpleUserAvatar, UserAvatarSkeleton } from '@/components/U
 import Username, { SimpleUsername } from '@/components/Username'
 import { getEventFeedTimestamp, isMentioningMutedUsers } from '@/lib/event'
 import { toNote, toUserAggregationDetail } from '@/lib/link'
+import { isRelayDisconnectReason } from '@/lib/relay'
 import { mergeTimelines } from '@/lib/timeline'
 import { cn, isTouchDevice } from '@/lib/utils'
 import { useSecondaryPage } from '@/PageManager'
@@ -200,18 +201,7 @@ const UserAggregationList = forwardRef<
             },
             onClose: (url, reason) => {
               if (!showRelayCloseReason) return
-              // ignore reasons from nostr-tools
-              if (
-                [
-                  'closed by caller',
-                  'relay connection errored',
-                  'relay connection closed',
-                  'pingpong timed out',
-                  'relay connection closed by us'
-                ].includes(reason)
-              ) {
-                return
-              }
+              if (isRelayDisconnectReason(reason)) return
 
               toast.error(`${url}: ${reason}`)
             }

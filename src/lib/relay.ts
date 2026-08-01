@@ -1,6 +1,16 @@
 import storage from '@/services/local-storage.service'
 import { TRelayInfo } from '@/types'
 
+const RELAY_DISCONNECT_REASONS = new Set([
+  'closed by caller',
+  'relay connection errored',
+  'relay connection failed',
+  'relay connection timed out',
+  'relay connection closed',
+  'pingpong timed out',
+  'relay connection closed by us'
+])
+
 export function getDefaultRelayUrls() {
   return storage.getDefaultRelayUrls()
 }
@@ -19,6 +29,10 @@ export function checkSearchRelay(relayInfo: TRelayInfo | undefined) {
 
 export function checkNip43Support(relayInfo: TRelayInfo | undefined) {
   return relayInfo?.supported_nips?.includes(43) && !!relayInfo.pubkey
+}
+
+export function isRelayDisconnectReason(reason: string) {
+  return RELAY_DISCONNECT_REASONS.has(reason)
 }
 
 export function filterOutBigRelays(relayUrls: string[]) {
