@@ -88,10 +88,10 @@ export const ApplicationDataKey = {
 }
 
 export const BIG_RELAY_URLS = [
-  'wss://relay.damus.io/',
   'wss://nos.lol/',
   'wss://relay.primal.net/',
-  'wss://offchain.pub/'
+  'wss://offchain.pub/',
+  'wss://relay.ditto.pub/'
 ]
 
 export const SEARCHABLE_RELAY_URLS = [
@@ -204,14 +204,14 @@ export const DEFAULT_NIP_96_SERVICE = 'https://nostr.build'
 export const DEFAULT_NOSTRCONNECT_RELAY = [
   'wss://bucket.coracle.social/',
   'wss://relay.primal.net/',
-  'wss://relay.damus.io/'
+  'wss://relay.ditto.pub/'
 ]
 
 export const DEFAULT_DM_RELAYS = [
   'wss://nip17.com/',
-  'wss://relay.damus.io/',
   'wss://nos.lol/',
-  'wss://relay.primal.net/'
+  'wss://relay.primal.net/',
+  'wss://offchain.pub/'
 ]
 
 export const DM_TIME_RANDOMIZATION_SECONDS = 2 * 24 * 60 * 60 // 2 days in seconds
