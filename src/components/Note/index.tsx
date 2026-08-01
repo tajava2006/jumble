@@ -15,6 +15,7 @@ import NoteContent from '../NoteContent'
 import NoteOptions from '../NoteOptions'
 import OpBadge from '../OpBadge'
 import ParentNotePreview from '../ParentNotePreview'
+import PowBadge from '../PowBadge'
 import ProtectedBadge from '../ProtectedBadge'
 import TranslateButton from '../TranslateButton'
 import TrustScoreBadge from '../TrustScoreBadge'
@@ -84,6 +85,7 @@ export default function Note({
                   className="shrink-0"
                   short={isSmallScreen}
                 />
+                <PowBadge event={event} className="shrink-0" />
               </div>
             </div>
           </div>

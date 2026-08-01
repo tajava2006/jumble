@@ -23,6 +23,7 @@ import Nip05 from '../Nip05'
 import NoteOptions from '../NoteOptions'
 import OpBadge from '../OpBadge'
 import ParentNotePreview from '../ParentNotePreview'
+import PowBadge from '../PowBadge'
 import StuffStats from '../StuffStats'
 import TranslateButton from '../TranslateButton'
 import TrustScoreBadge from '../TrustScoreBadge'
@@ -152,6 +153,7 @@ export default function ReplyNote({
                     className="shrink-0"
                     short={isSmallScreen}
                   />
+                  <PowBadge event={event} className="shrink-0" />
                 </div>
               </div>
               <div className="flex shrink-0 items-center">
