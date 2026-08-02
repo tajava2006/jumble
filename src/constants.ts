@@ -156,7 +156,10 @@ export const SUPPORTED_KINDS = [
   ExtendedKind.FOLLOW_PACK,
   kinds.Reaction,
   kinds.Zap,
-  ExtendedKind.EXTERNAL_CONTENT_REACTION
+  ExtendedKind.EXTERNAL_CONTENT_REACTION,
+  kinds.CommunityDefinition,
+  kinds.LiveEvent,
+  ExtendedKind.GROUP_METADATA
 ]
 
 export const DEFAULT_FEED_TABS: TFeedTabConfig[] = [

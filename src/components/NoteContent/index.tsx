@@ -45,14 +45,7 @@ export default function NoteContent({
     [event, nsfwDisplayPolicy]
   )
 
-  if (
-    ![
-      ...SUPPORTED_KINDS,
-      kinds.CommunityDefinition,
-      kinds.LiveEvent,
-      ExtendedKind.GROUP_METADATA
-    ].includes(event.kind)
-  ) {
+  if (!SUPPORTED_KINDS.includes(event.kind)) {
     return <UnknownNote className={cn('mt-2', className)} event={event} />
   }
 
