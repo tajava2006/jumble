@@ -26,6 +26,7 @@ import XEmbeddedPost from '@/components/XEmbeddedPost'
 import YoutubeEmbeddedPlayer from '@/components/YoutubeEmbeddedPlayer'
 import { EMOJI_REGEX, ExtendedKind } from '@/constants'
 import { BoundedMap } from '@/lib/bounded-map'
+import { canHover } from '@/lib/device'
 import {
   EmbeddedEmojiParser,
   EmbeddedEventParser,
@@ -678,7 +679,7 @@ function MessageBubble({
   }, [])
 
   const handleContextMenu = useCallback((e: React.MouseEvent) => {
-    if (!window.matchMedia('(hover: hover)').matches) return
+    if (!canHover()) return
     e.preventDefault()
     e.stopPropagation()
     const rect = bubbleRef.current?.getBoundingClientRect()

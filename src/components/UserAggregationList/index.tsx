@@ -7,7 +7,8 @@ import { getEventFeedTimestamp, isMentioningMutedUsers } from '@/lib/event'
 import { toNote, toUserAggregationDetail } from '@/lib/link'
 import { isRelayDisconnectReason } from '@/lib/relay'
 import { mergeTimelines } from '@/lib/timeline'
-import { cn, isTouchDevice } from '@/lib/utils'
+import { canHover } from '@/lib/device'
+import { cn } from '@/lib/utils'
 import { useSecondaryPage } from '@/PageManager'
 import { useContentPolicy } from '@/providers/ContentPolicyProvider'
 import { useDeletedEvent } from '@/providers/DeletedEventProvider'
@@ -507,7 +508,7 @@ function UserAggregationItem({
   isNew?: boolean
 }) {
   const { t } = useTranslation()
-  const supportTouch = useMemo(() => isTouchDevice(), [])
+  const supportsHover = useMemo(() => canHover(), [])
   const [hasNewEvents, setHasNewEvents] = useState(true)
   const [loading, setLoading] = useState(false)
   const { isPinned, togglePin } = usePinnedUsers()
@@ -557,19 +558,19 @@ function UserAggregationItem({
       )}
       onClick={onClick}
     >
-      {supportTouch ? (
+      {supportsHover ? (
+        <UserAvatar userId={aggregation.pubkey} className={!hasNewEvents ? 'grayscale' : ''} />
+      ) : (
         <SimpleUserAvatar
           userId={aggregation.pubkey}
           className={!hasNewEvents ? 'grayscale' : ''}
         />
-      ) : (
-        <UserAvatar userId={aggregation.pubkey} className={!hasNewEvents ? 'grayscale' : ''} />
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-center gap-2">
-          {supportTouch ? (
-            <SimpleUsername
+          {supportsHover ? (
+            <Username
               userId={aggregation.pubkey}
               className={cn(
                 'max-w-fit truncate text-base font-semibold',
@@ -578,7 +579,7 @@ function UserAggregationItem({
               skeletonClassName="h-4"
             />
           ) : (
-            <Username
+            <SimpleUsername
               userId={aggregation.pubkey}
               className={cn(
                 'max-w-fit truncate text-base font-semibold',

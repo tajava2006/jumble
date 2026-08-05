@@ -21,7 +21,8 @@ import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useRef } f
  *   [icon + title (left-aligned) | controls (right-aligned)]
  *
  * Simple pages only need to pass `icon` + `title` (+ optional `controls`); those props are shared
- * between mobile and desktop. Pages that need a fully custom titlebar (e.g. SearchPage, DmPage)
+ * between small and large screens. Pages that need a fully custom titlebar (e.g. SearchPage,
+ * DmPage)
  * can use the `titlebar` / `mobileTitlebar` escape hatches.
  */
 const PrimaryPageLayout = forwardRef(

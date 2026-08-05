@@ -1,7 +1,8 @@
 import { ExtendedKind, SPECIAL_TRUST_SCORE_FILTER_ID } from '@/constants'
 import { useInfiniteScroll } from '@/hooks'
 import { useNotificationFilter } from '@/hooks/useNotificationFilter'
-import { cn, isTouchDevice } from '@/lib/utils'
+import { prefersTouchInteraction } from '@/lib/device'
+import { cn } from '@/lib/utils'
 import { usePrimaryPage } from '@/PageManager'
 import { useDeepBrowsing } from '@/providers/DeepBrowsingProvider'
 import { useNostr } from '@/providers/NostrProvider'
@@ -33,7 +34,7 @@ export default function NotificationList() {
   const [lastReadTime, setLastReadTime] = useState(0)
   const [filteredEvents, setFilteredEvents] = useState<NostrEvent[]>([])
   const [initialLoading, setInitialLoading] = useState(notificationService.getInitialLoading())
-  const supportTouch = useMemo(() => isTouchDevice(), [])
+  const prefersTouch = useMemo(() => prefersTouchInteraction(), [])
   const topRef = useRef<HTMLDivElement | null>(null)
   const filterKinds = useMemo(() => {
     switch (notificationType) {
@@ -186,7 +187,7 @@ export default function NotificationList() {
         }}
         options={
           <>
-            {!supportTouch ? <RefreshButton onClick={() => refresh()} /> : null}
+            {!prefersTouch ? <RefreshButton onClick={() => refresh()} /> : null}
             <TrustScoreFilter filterId={SPECIAL_TRUST_SCORE_FILTER_ID.NOTIFICATIONS} />
           </>
         }

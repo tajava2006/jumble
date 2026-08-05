@@ -35,6 +35,24 @@ describe('saveImage', () => {
 
     expect(saveAs).toHaveBeenCalledWith(preparedImage.blob, preparedImage.filename)
   })
+
+  it('keeps download behavior on touch-enabled Windows devices', () => {
+    const share = vi.fn(() => Promise.resolve())
+    vi.stubGlobal('navigator', {
+      canShare: () => true,
+      maxTouchPoints: 10,
+      platform: 'Win32',
+      share,
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/132.0 Safari/537.36'
+    })
+    const saveAs = vi.fn()
+
+    saveImage('https://example.com/image.png', preparedImage, saveAs)
+
+    expect(share).not.toHaveBeenCalled()
+    expect(saveAs).toHaveBeenCalledWith(preparedImage.blob, preparedImage.filename)
+  })
 })
 
 function createMobileNavigator(share: (data?: ShareData) => Promise<void>) {

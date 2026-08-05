@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton'
+import { canHover } from '@/lib/device'
 import { toExternalContent } from '@/lib/link'
-import { cn, isTouchDevice } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import { useSecondaryPage } from '@/PageManager'
 import { useTheme } from '@/providers/ThemeProvider'
 import { MessageCircle } from 'lucide-react'
@@ -18,7 +19,7 @@ const Post = memo(({ tweetId, url, className, embedded = true }: PostProps) => {
   const { t } = useTranslation()
   const { theme } = useTheme()
   const { push } = useSecondaryPage()
-  const supportTouch = useMemo(() => isTouchDevice(), [])
+  const supportsHover = useMemo(() => canHover(), [])
   const [loaded, setLoaded] = useState(false)
   const loadingRef = useRef<boolean>(false)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -112,7 +113,7 @@ const Post = memo(({ tweetId, url, className, embedded = true }: PostProps) => {
     >
       <div ref={containerRef} className="cursor-pointer" onClick={handleViewComments} />
       {!loaded && <Skeleton className="absolute inset-0 h-full w-full rounded-lg" />}
-      {loaded && embedded && !supportTouch && (
+      {loaded && embedded && supportsHover && (
         /* Hover overlay */
         <div
           className="bg-background/40 absolute inset-0 flex cursor-pointer items-center justify-center rounded-lg border opacity-0 backdrop-blur-sm transition-opacity duration-200 ease-out group-hover:opacity-100"

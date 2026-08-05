@@ -1,4 +1,4 @@
-import { isTouchDevice } from './utils'
+import { isMobileOperatingSystem } from './device'
 
 export type SaveAs = (source: string | Blob, name?: string) => void
 
@@ -25,12 +25,12 @@ export async function prepareImageForSave(
 }
 
 export function shouldPrepareImageForShare() {
-  return isMobileDevice() && typeof navigator.share === 'function'
+  return isMobileOperatingSystem() && typeof navigator.share === 'function'
 }
 
 export function saveImage(url: string, preparedImage: PreparedImage | undefined, saveAs: SaveAs) {
   const fallbackFilename = getImageFilename(url)
-  const isMobile = isMobileDevice()
+  const isMobile = isMobileOperatingSystem()
 
   const download = () => {
     if (preparedImage) {
@@ -67,13 +67,6 @@ export function saveImage(url: string, preparedImage: PreparedImage | undefined,
     console.warn('Failed to share image with the system', error)
     download()
   }
-}
-
-function isMobileDevice() {
-  const userAgent = navigator.userAgent
-  const isMobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(userAgent)
-  const isIPadDesktopMode = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
-  return isMobileUserAgent || isIPadDesktopMode || isTouchDevice()
 }
 
 function getImageFilename(url: string, mimeType?: string) {
