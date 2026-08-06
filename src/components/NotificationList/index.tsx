@@ -1,20 +1,22 @@
-import { ExtendedKind, SPECIAL_TRUST_SCORE_FILTER_ID } from '@/constants'
+import { SPECIAL_TRUST_SCORE_FILTER_ID } from '@/constants'
 import { useInfiniteScroll } from '@/hooks'
 import { useNotificationFilter } from '@/hooks/useNotificationFilter'
 import { prefersTouchInteraction } from '@/lib/device'
+import { getNotificationFilterType } from '@/lib/notification'
 import { cn } from '@/lib/utils'
 import { usePrimaryPage } from '@/PageManager'
 import { useDeepBrowsing } from '@/providers/DeepBrowsingProvider'
 import { useNostr } from '@/providers/NostrProvider'
 import { useNotification } from '@/providers/NotificationProvider'
+import { useUserPreferences } from '@/providers/UserPreferencesProvider'
 import notificationService from '@/services/notification.service'
-import { TNotificationType } from '@/types'
 import dayjs from 'dayjs'
-import { NostrEvent, kinds } from 'nostr-tools'
+import { NostrEvent } from 'nostr-tools'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import PullToRefresh from '../PullToRefresh'
 import { LoadingBar } from '../LoadingBar'
+import NotificationTabsCustomizeDialog from '../NotificationTabsCustomizeDialog'
 import { RefreshButton } from '../RefreshButton'
 import Tabs from '../Tabs'
 import TrustScoreFilter from '../TrustScoreFilter'
@@ -29,36 +31,26 @@ export default function NotificationList() {
   const { current } = usePrimaryPage()
   const { pubkey } = useNostr()
   const { getNotificationsSeenAt } = useNotification()
+  const { notificationTabs } = useUserPreferences()
   const filterFn = useNotificationFilter()
-  const [notificationType, setNotificationType] = useState<TNotificationType>('all')
+  const visibleTabs = useMemo(
+    () => notificationTabs.filter((tab) => !tab.hidden),
+    [notificationTabs]
+  )
+  const [notificationType, setNotificationType] = useState(visibleTabs[0].id)
+  const [customizeOpen, setCustomizeOpen] = useState(false)
   const [lastReadTime, setLastReadTime] = useState(0)
   const [filteredEvents, setFilteredEvents] = useState<NostrEvent[]>([])
   const [initialLoading, setInitialLoading] = useState(notificationService.getInitialLoading())
   const prefersTouch = useMemo(() => prefersTouchInteraction(), [])
   const topRef = useRef<HTMLDivElement | null>(null)
-  const filterKinds = useMemo(() => {
-    switch (notificationType) {
-      case 'mentions':
-        return new Set<number>([
-          kinds.ShortTextNote,
-          kinds.Highlights,
-          ExtendedKind.COMMENT,
-          ExtendedKind.VOICE_COMMENT,
-          ExtendedKind.POLL
-        ])
-      case 'reactions':
-        return new Set<number>([
-          kinds.Reaction,
-          kinds.Repost,
-          kinds.GenericRepost,
-          ExtendedKind.POLL_RESPONSE
-        ])
-      case 'zaps':
-        return new Set<number>([kinds.Zap])
-      default:
-        return null
+  const selectedTab = visibleTabs.find((tab) => tab.id === notificationType) ?? visibleTabs[0]
+
+  useEffect(() => {
+    if (!visibleTabs.some((tab) => tab.id === notificationType)) {
+      setNotificationType(visibleTabs[0].id)
     }
-  }, [notificationType])
+  }, [notificationType, visibleTabs])
 
   // Snapshot the page-level last-read marker only when this page becomes
   // current. We deliberately don't react to subsequent changes of
@@ -125,9 +117,12 @@ export default function NotificationList() {
   }, [])
 
   const notifications = useMemo(() => {
-    if (!filterKinds) return filteredEvents
-    return filteredEvents.filter((evt) => filterKinds.has(evt.kind))
-  }, [filteredEvents, filterKinds])
+    const enabledFilters = new Set(selectedTab.filters)
+    return filteredEvents.filter((event) => {
+      const filter = getNotificationFilterType(event, pubkey)
+      return filter === null ? selectedTab.builtin === 'all' : enabledFilters.has(filter)
+    })
+  }, [filteredEvents, selectedTab, pubkey])
 
   const { visibleItems, shouldShowLoadingIndicator, bottomRef, setShowCount } = useInfiniteScroll({
     items: notifications,
@@ -174,17 +169,13 @@ export default function NotificationList() {
     <div>
       <Tabs
         value={notificationType}
-        tabs={[
-          { value: 'all', label: 'All' },
-          { value: 'mentions', label: 'Mentions' },
-          { value: 'reactions', label: 'Reactions' },
-          { value: 'zaps', label: 'Zaps' }
-        ]}
+        tabs={visibleTabs.map((tab) => ({ value: tab.id, label: tab.label }))}
         onTabChange={(type) => {
           setShowCount(SHOW_COUNT)
-          setNotificationType(type as TNotificationType)
+          setNotificationType(type as typeof notificationType)
           topRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' })
         }}
+        onCustomize={() => setCustomizeOpen(true)}
         options={
           <>
             {!prefersTouch ? <RefreshButton onClick={() => refresh()} /> : null}
@@ -202,6 +193,7 @@ export default function NotificationList() {
       >
         {list}
       </PullToRefresh>
+      <NotificationTabsCustomizeDialog open={customizeOpen} onOpenChange={setCustomizeOpen} />
     </div>
   )
 }

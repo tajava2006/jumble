@@ -1,5 +1,10 @@
 import { kinds } from 'nostr-tools'
-import { TFeedTabConfig, TRelaySet } from './types'
+import {
+  TFeedTabConfig,
+  type TNotificationFilter,
+  TNotificationTabConfig,
+  TRelaySet
+} from './types'
 
 export const JUMBLE_API_BASE_URL = 'https://api.jumble.social'
 
@@ -19,6 +24,7 @@ export const StorageKey = {
   ADD_CLIENT_TAG: 'addClientTag',
   DEFAULT_MIN_POW: 'defaultMinPow',
   NOTIFICATION_TYPE: 'notificationType',
+  NOTIFICATION_TABS: 'notificationTabs',
   DEFAULT_ZAP_SATS: 'defaultZapSats',
   DEFAULT_ZAP_COMMENT: 'defaultZapComment',
   QUICK_ZAP: 'quickZap',
@@ -82,6 +88,32 @@ export const StorageKey = {
   ACTIVE_RELAY_SET_ID: 'activeRelaySetId', // deprecated
   FEED_TYPE: 'feedType' // deprecated
 }
+
+export const DEFAULT_NOTIFICATION_FILTERS: TNotificationFilter[] = [
+  'mentions',
+  'replies',
+  'likes',
+  'quotes',
+  'reposts',
+  'zaps'
+]
+
+export const DEFAULT_NOTIFICATION_TABS: TNotificationTabConfig[] = [
+  { id: 'all', builtin: 'all', label: 'All', filters: DEFAULT_NOTIFICATION_FILTERS },
+  {
+    id: 'mentions',
+    builtin: 'mentions',
+    label: 'Mentions',
+    filters: ['mentions', 'replies', 'quotes']
+  },
+  {
+    id: 'reactions',
+    builtin: 'reactions',
+    label: 'Reactions',
+    filters: ['likes', 'reposts']
+  },
+  { id: 'zaps', builtin: 'zaps', label: 'Zaps', filters: ['zaps'] }
+]
 
 export const ApplicationDataKey = {
   NOTIFICATIONS_SEEN_AT: 'seen_notifications_at'

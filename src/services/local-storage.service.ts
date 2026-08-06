@@ -4,6 +4,8 @@ import {
   DEFAULT_BLOSSOM_CACHE_SERVER_URL,
   DEFAULT_FAVICON_URL_TEMPLATE,
   DEFAULT_FEED_TABS,
+  DEFAULT_NOTIFICATION_FILTERS,
+  DEFAULT_NOTIFICATION_TABS,
   ExtendedKind,
   MEDIA_AUTO_LOAD_POLICY,
   NOTIFICATION_LIST_STYLE,
@@ -27,6 +29,7 @@ import {
   TMediaAutoLoadPolicy,
   TMediaUploadServiceConfig,
   TNotificationStyle,
+  TNotificationTabConfig,
   TNsfwDisplayPolicy,
   TProfilePictureAutoLoadPolicy,
   TRelaySet,
@@ -46,6 +49,7 @@ class LocalStorageService {
   private currentAccount: TAccount | null = null
   private feedTabs: TFeedTabConfig[] = DEFAULT_FEED_TABS
   private lastReadNotificationTimeMap: Record<string, number> = {}
+  private notificationTabs: TNotificationTabConfig[] = DEFAULT_NOTIFICATION_TABS
   private defaultZapSats: number = 21
   private defaultZapComment: string = 'Zap!'
   private quickZap: boolean = false
@@ -149,6 +153,50 @@ class LocalStorageService {
     const lastReadNotificationTimeMapStr =
       window.localStorage.getItem(StorageKey.LAST_READ_NOTIFICATION_TIME_MAP) ?? '{}'
     this.lastReadNotificationTimeMap = JSON.parse(lastReadNotificationTimeMapStr)
+
+    const notificationTabsStr = window.localStorage.getItem(StorageKey.NOTIFICATION_TABS)
+    if (notificationTabsStr) {
+      try {
+        const parsed = JSON.parse(notificationTabsStr)
+        if (Array.isArray(parsed)) {
+          const valid = parsed.flatMap((tab): TNotificationTabConfig[] => {
+            if (
+              !tab ||
+              typeof tab !== 'object' ||
+              typeof tab.id !== 'string' ||
+              tab.id.length === 0 ||
+              typeof tab.label !== 'string' ||
+              tab.label.length === 0 ||
+              !Array.isArray(tab.filters)
+            ) {
+              return []
+            }
+            const defaultTab = DEFAULT_NOTIFICATION_TABS.find((item) => item.id === tab.id)
+            return [
+              {
+                id: tab.id,
+                label: defaultTab?.label ?? tab.label,
+                filters: DEFAULT_NOTIFICATION_FILTERS.filter((filter) =>
+                  tab.filters.includes(filter)
+                ),
+                hidden: defaultTab?.builtin === 'all' ? false : tab.hidden === true,
+                builtin: defaultTab?.builtin
+              }
+            ]
+          })
+          if (
+            valid.length > 0 &&
+            new Set(valid.map((tab) => tab.id)).size === valid.length &&
+            valid.some((tab) => tab.builtin === 'all') &&
+            valid.some((tab) => !tab.hidden)
+          ) {
+            this.notificationTabs = valid
+          }
+        }
+      } catch {
+        // ignore, fall back to defaults
+      }
+    }
 
     const relaySetsStr = window.localStorage.getItem(StorageKey.RELAY_SETS)
     if (!relaySetsStr) {
@@ -932,6 +980,15 @@ class LocalStorageService {
       StorageKey.LAST_READ_NOTIFICATION_TIME_MAP,
       JSON.stringify(this.lastReadNotificationTimeMap)
     )
+  }
+
+  getNotificationTabs() {
+    return this.notificationTabs
+  }
+
+  setNotificationTabs(tabs: TNotificationTabConfig[]) {
+    this.notificationTabs = tabs
+    window.localStorage.setItem(StorageKey.NOTIFICATION_TABS, JSON.stringify(tabs))
   }
 
   getFeedInfo(pubkey: string) {

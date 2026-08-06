@@ -162,6 +162,15 @@ export type TFeedTabConfig = {
 }
 
 export type TNotificationType = 'all' | 'mentions' | 'reactions' | 'zaps'
+export type TNotificationFilter = 'mentions' | 'replies' | 'likes' | 'quotes' | 'reposts' | 'zaps'
+
+export type TNotificationTabConfig = {
+  id: string
+  label: string
+  filters: TNotificationFilter[]
+  hidden?: boolean
+  builtin?: TNotificationType
+}
 
 export type TPageRef = { scrollToTop: (behavior?: ScrollBehavior) => void }
 

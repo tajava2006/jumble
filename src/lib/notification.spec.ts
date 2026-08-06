@@ -1,7 +1,7 @@
 import { ExtendedKind } from '@/constants'
-import { kinds, type NostrEvent } from 'nostr-tools'
+import { kinds, nip19, type NostrEvent } from 'nostr-tools'
 import { describe, expect, it, vi } from 'vitest'
-import { notificationFilter } from './notification'
+import { getNotificationFilterType, notificationFilter } from './notification'
 
 vi.mock('@/services/client.service', () => ({ default: {} }))
 
@@ -92,5 +92,38 @@ describe('notificationFilter', () => {
     })
 
     await expect(filter(event)).resolves.toBe(true)
+  })
+})
+
+describe('getNotificationFilterType', () => {
+  it.each([
+    [kinds.Reaction, 'likes'],
+    [ExtendedKind.POLL_RESPONSE, 'likes'],
+    [kinds.Repost, 'reposts'],
+    [kinds.GenericRepost, 'reposts'],
+    [kinds.Zap, 'zaps']
+  ] as const)('classifies kind %i as %s', (kind, expected) => {
+    expect(getNotificationFilterType(createEvent({ kind }), currentPubkey)).toBe(expected)
+  })
+
+  it('classifies replies separately from quotes', () => {
+    const reply = createEvent({
+      kind: kinds.ShortTextNote,
+      tags: [['e', '5'.repeat(64), '', 'reply']]
+    })
+    const quote = createEvent({ kind: kinds.ShortTextNote, tags: [['p', currentPubkey]] })
+
+    expect(getNotificationFilterType(reply, currentPubkey)).toBe('replies')
+    expect(getNotificationFilterType(quote, currentPubkey)).toBe('quotes')
+  })
+
+  it('classifies explicit mentions separately from quotes', () => {
+    const mention = {
+      ...createEvent({ kind: kinds.ShortTextNote, tags: [['p', currentPubkey]] }),
+      id: '6'.repeat(64),
+      content: `nostr:${nip19.npubEncode(currentPubkey)}`
+    }
+
+    expect(getNotificationFilterType(mention, currentPubkey)).toBe('mentions')
   })
 })

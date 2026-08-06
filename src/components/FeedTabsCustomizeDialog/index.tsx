@@ -256,6 +256,7 @@ function TabRow({
       )}
     >
       <div
+        data-drawer-swipe-lock
         className="cursor-grab touch-none rounded-md p-2 hover:bg-muted active:cursor-grabbing"
         {...attributes}
         {...listeners}

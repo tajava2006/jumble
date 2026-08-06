@@ -1,6 +1,6 @@
 import client from '@/services/client.service'
 import storage from '@/services/local-storage.service'
-import { TEmoji, TFeedTabConfig, TNotificationStyle } from '@/types'
+import { TEmoji, TFeedTabConfig, TNotificationStyle, TNotificationTabConfig } from '@/types'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useScreenSize } from './ScreenSizeProvider'
 
@@ -28,6 +28,9 @@ type TUserPreferencesContext = {
 
   feedTabs: TFeedTabConfig[]
   updateFeedTabs: (tabs: TFeedTabConfig[]) => void
+
+  notificationTabs: TNotificationTabConfig[]
+  updateNotificationTabs: (tabs: TNotificationTabConfig[]) => void
 }
 
 const UserPreferencesContext = createContext<TUserPreferencesContext | undefined>(undefined)
@@ -57,6 +60,9 @@ export function UserPreferencesProvider({ children }: { children: React.ReactNod
     storage.getAllowInsecureConnection()
   )
   const [feedTabs, setFeedTabs] = useState<TFeedTabConfig[]>(storage.getFeedTabs())
+  const [notificationTabs, setNotificationTabs] = useState<TNotificationTabConfig[]>(
+    storage.getNotificationTabs()
+  )
 
   useEffect(() => {
     if (!isSmallScreen && enableSingleColumnLayout) {
@@ -102,6 +108,11 @@ export function UserPreferencesProvider({ children }: { children: React.ReactNod
     storage.setFeedTabs(tabs)
   }
 
+  const updateNotificationTabs = (tabs: TNotificationTabConfig[]) => {
+    setNotificationTabs(tabs)
+    storage.setNotificationTabs(tabs)
+  }
+
   return (
     <UserPreferencesContext.Provider
       value={{
@@ -120,7 +131,9 @@ export function UserPreferencesProvider({ children }: { children: React.ReactNod
         allowInsecureConnection,
         updateAllowInsecureConnection,
         feedTabs,
-        updateFeedTabs
+        updateFeedTabs,
+        notificationTabs,
+        updateNotificationTabs
       }}
     >
       {children}
