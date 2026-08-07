@@ -25,6 +25,7 @@ export const StorageKey = {
   DEFAULT_MIN_POW: 'defaultMinPow',
   NOTIFICATION_TYPE: 'notificationType',
   NOTIFICATION_TABS: 'notificationTabs',
+  NOTIFICATION_TABS_VERSION: 'notificationTabsVersion',
   DEFAULT_ZAP_SATS: 'defaultZapSats',
   DEFAULT_ZAP_COMMENT: 'defaultZapComment',
   QUICK_ZAP: 'quickZap',
@@ -95,7 +96,9 @@ export const DEFAULT_NOTIFICATION_FILTERS: TNotificationFilter[] = [
   'likes',
   'quotes',
   'reposts',
-  'zaps'
+  'zaps',
+  'highlights',
+  'pollResponses'
 ]
 
 export const DEFAULT_NOTIFICATION_TABS: TNotificationTabConfig[] = [
@@ -104,13 +107,13 @@ export const DEFAULT_NOTIFICATION_TABS: TNotificationTabConfig[] = [
     id: 'mentions',
     builtin: 'mentions',
     label: 'Mentions',
-    filters: ['mentions', 'replies', 'quotes']
+    filters: ['mentions', 'replies', 'quotes', 'highlights']
   },
   {
     id: 'reactions',
     builtin: 'reactions',
     label: 'Reactions',
-    filters: ['likes', 'reposts']
+    filters: ['likes', 'reposts', 'pollResponses']
   },
   { id: 'zaps', builtin: 'zaps', label: 'Zaps', filters: ['zaps'] }
 ]

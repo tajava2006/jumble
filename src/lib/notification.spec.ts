@@ -98,10 +98,11 @@ describe('notificationFilter', () => {
 describe('getNotificationFilterType', () => {
   it.each([
     [kinds.Reaction, 'likes'],
-    [ExtendedKind.POLL_RESPONSE, 'likes'],
+    [ExtendedKind.POLL_RESPONSE, 'pollResponses'],
     [kinds.Repost, 'reposts'],
     [kinds.GenericRepost, 'reposts'],
-    [kinds.Zap, 'zaps']
+    [kinds.Zap, 'zaps'],
+    [kinds.Highlights, 'highlights']
   ] as const)('classifies kind %i as %s', (kind, expected) => {
     expect(getNotificationFilterType(createEvent({ kind }), currentPubkey)).toBe(expected)
   })

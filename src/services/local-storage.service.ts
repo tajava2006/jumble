@@ -154,6 +154,9 @@ class LocalStorageService {
       window.localStorage.getItem(StorageKey.LAST_READ_NOTIFICATION_TIME_MAP) ?? '{}'
     this.lastReadNotificationTimeMap = JSON.parse(lastReadNotificationTimeMapStr)
 
+    const notificationTabsVersion = parseInt(
+      window.localStorage.getItem(StorageKey.NOTIFICATION_TABS_VERSION) ?? '0'
+    )
     const notificationTabsStr = window.localStorage.getItem(StorageKey.NOTIFICATION_TABS)
     if (notificationTabsStr) {
       try {
@@ -176,10 +179,20 @@ class LocalStorageService {
               {
                 id: tab.id,
                 label: defaultTab?.label ?? tab.label,
-                filters: DEFAULT_NOTIFICATION_FILTERS.filter((filter) =>
-                  tab.filters.includes(filter)
+                filters: DEFAULT_NOTIFICATION_FILTERS.filter(
+                  (filter) =>
+                    tab.filters.includes(filter) ||
+                    (notificationTabsVersion < 1 &&
+                      defaultTab?.builtin === 'all' &&
+                      filter === 'highlights') ||
+                    (notificationTabsVersion < 2 &&
+                      (defaultTab?.builtin === 'all' || defaultTab?.builtin === 'reactions') &&
+                      filter === 'pollResponses') ||
+                    (notificationTabsVersion < 3 &&
+                      defaultTab?.builtin === 'mentions' &&
+                      filter === 'highlights')
                 ),
-                hidden: defaultTab?.builtin === 'all' ? false : tab.hidden === true,
+                hidden: tab.hidden === true,
                 builtin: defaultTab?.builtin
               }
             ]
@@ -197,6 +210,7 @@ class LocalStorageService {
         // ignore, fall back to defaults
       }
     }
+    window.localStorage.setItem(StorageKey.NOTIFICATION_TABS_VERSION, '3')
 
     const relaySetsStr = window.localStorage.getItem(StorageKey.RELAY_SETS)
     if (!relaySetsStr) {

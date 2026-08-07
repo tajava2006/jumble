@@ -162,7 +162,15 @@ export type TFeedTabConfig = {
 }
 
 export type TNotificationType = 'all' | 'mentions' | 'reactions' | 'zaps'
-export type TNotificationFilter = 'mentions' | 'replies' | 'likes' | 'quotes' | 'reposts' | 'zaps'
+export type TNotificationFilter =
+  | 'mentions'
+  | 'replies'
+  | 'likes'
+  | 'quotes'
+  | 'reposts'
+  | 'zaps'
+  | 'highlights'
+  | 'pollResponses'
 
 export type TNotificationTabConfig = {
   id: string

@@ -120,7 +120,7 @@ export default function NotificationList() {
     const enabledFilters = new Set(selectedTab.filters)
     return filteredEvents.filter((event) => {
       const filter = getNotificationFilterType(event, pubkey)
-      return filter === null ? selectedTab.builtin === 'all' : enabledFilters.has(filter)
+      return filter !== null && enabledFilters.has(filter)
     })
   }, [filteredEvents, selectedTab, pubkey])
 

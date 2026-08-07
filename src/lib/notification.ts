@@ -16,7 +16,8 @@ export function getNotificationFilterType(
   if (event.kind === kinds.Reaction) return 'likes'
   if (event.kind === kinds.Repost || event.kind === kinds.GenericRepost) return 'reposts'
   if (event.kind === kinds.Zap) return 'zaps'
-  if (event.kind === ExtendedKind.POLL_RESPONSE) return 'likes'
+  if (event.kind === kinds.Highlights) return 'highlights'
+  if (event.kind === ExtendedKind.POLL_RESPONSE) return 'pollResponses'
   if (event.kind === ExtendedKind.POLL) return 'mentions'
 
   if (

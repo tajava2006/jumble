@@ -39,6 +39,7 @@ import {
   AtSign,
   GripVertical,
   Heart,
+  Highlighter,
   MessageCircle,
   Pencil,
   Plus,
@@ -46,6 +47,7 @@ import {
   Repeat,
   RotateCcw,
   Trash2,
+  Vote,
   Zap
 } from 'lucide-react'
 import { ComponentType, useEffect, useMemo, useState } from 'react'
@@ -79,6 +81,13 @@ const FILTER_OPTIONS: {
       'aria-pressed:bg-emerald-400/10 aria-pressed:text-emerald-400 aria-pressed:ring-emerald-400/30'
   },
   {
+    value: 'highlights',
+    label: 'Highlights',
+    icon: Highlighter,
+    activeClassName:
+      'aria-pressed:bg-orange-400/10 aria-pressed:text-orange-400 aria-pressed:ring-orange-400/30'
+  },
+  {
     value: 'reposts',
     label: 'Reposts',
     icon: Repeat,
@@ -91,6 +100,13 @@ const FILTER_OPTIONS: {
     icon: Heart,
     activeClassName:
       'aria-pressed:bg-rose-400/10 aria-pressed:text-rose-400 aria-pressed:ring-rose-400/30'
+  },
+  {
+    value: 'pollResponses',
+    label: 'Poll',
+    icon: Vote,
+    activeClassName:
+      'aria-pressed:bg-violet-400/10 aria-pressed:text-violet-400 aria-pressed:ring-violet-400/30'
   },
   {
     value: 'zaps',
@@ -190,7 +206,7 @@ export default function NotificationTabsCustomizeDialog({
               <TabRow
                 key={tab.id}
                 tab={tab}
-                disableHide={tab.builtin === 'all' || (!tab.hidden && visibleTabCount === 1)}
+                disableHide={!tab.hidden && visibleTabCount === 1}
                 onToggle={(filter) => toggleFilter(tab.id, filter)}
                 onToggleHidden={() =>
                   updateTab(tab.id, (current) => ({ ...current, hidden: !current.hidden }))
@@ -343,7 +359,7 @@ function TabRow({
           </>
         )}
       </div>
-      <div className="bg-muted/20 col-start-2 col-end-4 row-start-2 grid w-full grid-cols-6 gap-1 rounded-lg p-1 sm:col-start-3 sm:col-end-4 sm:row-start-1 sm:flex sm:w-auto sm:justify-end sm:gap-0.5 sm:bg-transparent sm:p-0">
+      <div className="bg-muted/20 col-start-2 col-end-4 row-start-2 grid w-full grid-cols-4 gap-1 rounded-lg p-1 sm:col-start-3 sm:col-end-4 sm:row-start-1 sm:flex sm:w-auto sm:justify-end sm:gap-0.5 sm:bg-transparent sm:p-0">
         <FilterToggles filters={tab.filters} onToggle={onToggle} disabled={tab.hidden} />
       </div>
       <Switch
