@@ -8,8 +8,10 @@ import {
 
 export const JUMBLE_API_BASE_URL = 'https://api.jumble.social'
 
+export const JUMBLE_BLOSSOM_SERVER = 'https://blossom.jumble.social/'
+
 export const RECOMMENDED_BLOSSOM_SERVERS = [
-  'https://blossom.jumble.social/',
+  JUMBLE_BLOSSOM_SERVER,
   'https://blossom.band/',
   'https://blossom.primal.net/',
   'https://nostr.media/'

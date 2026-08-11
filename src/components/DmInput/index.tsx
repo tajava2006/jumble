@@ -5,6 +5,7 @@ import ExpressionPickerDialog from '@/components/ExpressionPickerDialog'
 import Nip05 from '@/components/Nip05'
 import { SimpleUserAvatar } from '@/components/UserAvatar'
 import { SimpleUsername } from '@/components/Username'
+import { JUMBLE_BLOSSOM_SERVER } from '@/constants'
 import { getMediaMeta } from '@/lib/media-meta'
 import { userIdToPubkey } from '@/lib/pubkey'
 import { getEmojiInfosFromEmojiTags } from '@/lib/tag'
@@ -570,7 +571,8 @@ export default function DmInput({
               prev.map((item) => (item.id === id ? { ...item, progress: p } : item))
             )
           },
-          signal: abortController.signal
+          signal: abortController.signal,
+          fallbackBlossomServer: JUMBLE_BLOSSOM_SERVER
         })
 
         setMediaItems((prev) =>

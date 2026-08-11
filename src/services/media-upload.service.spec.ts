@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { JUMBLE_BLOSSOM_SERVER } from '@/constants'
 
 const clientMock = vi.hoisted(() => ({
   pubkey: 'test-pubkey',
@@ -55,6 +56,7 @@ describe('Blossom media uploads', () => {
     vi.stubGlobal('window', globalThis)
     vi.clearAllMocks()
     clientMock.fetchBlossomServerList.mockResolvedValue(servers)
+    mediaUpload.setServiceConfig({ type: 'blossom' })
   })
 
   it('tries servers in order until an upload succeeds', async () => {
@@ -103,6 +105,102 @@ describe('Blossom media uploads', () => {
       servers.map((server) => `${server}upload`)
     )
     expect(blossomClientMock.mirrorBlob).not.toHaveBeenCalled()
+  })
+
+  it('uses the requested fallback Blossom server after configured servers fail', async () => {
+    const blob = {
+      url: `${JUMBLE_BLOSSOM_SERVER}file-hash`,
+      sha256: 'file-hash',
+      size: 4,
+      type: 'application/octet-stream'
+    }
+    const fetchMock = vi.fn(async (input: URL | RequestInfo, init?: RequestInit) => {
+      const url = input.toString()
+      if (url !== `${JUMBLE_BLOSSOM_SERVER}upload`) {
+        return new Response(null, { status: 500 })
+      }
+      return init?.method === 'HEAD' ? new Response(null, { status: 200 }) : Response.json(blob)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await mediaUpload.upload(
+      new File(['test'], 'encrypted.bin', { type: 'application/octet-stream' }),
+      { fallbackBlossomServer: JUMBLE_BLOSSOM_SERVER }
+    )
+
+    expect(result.url).toBe(blob.url)
+    expect(fetchMock.mock.calls.map(([input]) => input.toString())).toEqual([
+      ...servers.map((server) => `${server}upload`),
+      `${JUMBLE_BLOSSOM_SERVER}upload`,
+      `${JUMBLE_BLOSSOM_SERVER}upload`
+    ])
+  })
+
+  it('does not retry a fallback Blossom server that was already attempted', async () => {
+    clientMock.fetchBlossomServerList.mockResolvedValue([
+      servers[0],
+      JUMBLE_BLOSSOM_SERVER,
+      servers[1]
+    ])
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 500 }))
+    vi.stubGlobal('fetch', fetchMock)
+
+    await expect(
+      mediaUpload.upload(new File(['test'], 'encrypted.bin'), {
+        fallbackBlossomServer: JUMBLE_BLOSSOM_SERVER
+      })
+    ).rejects.toThrow('second.example (500): Server error')
+
+    expect(fetchMock.mock.calls.map(([input]) => input.toString())).toEqual([
+      `${servers[0]}upload`,
+      `${JUMBLE_BLOSSOM_SERVER}upload`,
+      `${servers[1]}upload`
+    ])
+  })
+
+  it('uses the fallback Blossom endpoint even when a NIP-96 service has the same origin', async () => {
+    const nip96Service = JUMBLE_BLOSSOM_SERVER.replace(/\/$/, '')
+    const blob = {
+      url: `${JUMBLE_BLOSSOM_SERVER}file-hash`,
+      sha256: 'file-hash',
+      size: 4,
+      type: 'application/octet-stream'
+    }
+    class FailedXMLHttpRequest {
+      upload = { onprogress: null }
+      status = 500
+      statusText = ''
+      response = { message: 'NIP-96 failed' }
+      onerror: (() => void) | null = null
+      onload: (() => void) | null = null
+
+      open() {}
+      setRequestHeader() {}
+      abort() {}
+      send() {
+        this.onload?.()
+      }
+    }
+    vi.stubGlobal('XMLHttpRequest', FailedXMLHttpRequest)
+    const fetchMock = vi.fn(async (input: URL | RequestInfo, init?: RequestInit) => {
+      if (input.toString() === `${nip96Service}/.well-known/nostr/nip96.json`) {
+        return Response.json({ api_url: `${nip96Service}/upload` })
+      }
+      return init?.method === 'HEAD' ? new Response(null, { status: 200 }) : Response.json(blob)
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    mediaUpload.setServiceConfig({ type: 'nip96', service: nip96Service })
+
+    const result = await mediaUpload.upload(new File(['test'], 'encrypted.bin'), {
+      fallbackBlossomServer: JUMBLE_BLOSSOM_SERVER
+    })
+
+    expect(result.url).toBe(blob.url)
+    expect(fetchMock.mock.calls.map(([input]) => input.toString())).toEqual([
+      `${nip96Service}/.well-known/nostr/nip96.json`,
+      `${JUMBLE_BLOSSOM_SERVER}upload`,
+      `${JUMBLE_BLOSSOM_SERVER}upload`
+    ])
   })
 
   it('stops trying servers when the upload is cancelled', async () => {

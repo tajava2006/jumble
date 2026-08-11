@@ -13,6 +13,7 @@ import storage from './local-storage.service'
 type UploadOptions = {
   onProgress?: (progressPercent: number) => void
   signal?: AbortSignal
+  fallbackBlossomServer?: string
 }
 
 export const UPLOAD_ABORTED_ERROR_MSG = 'Upload aborted'
@@ -62,7 +63,19 @@ class MediaUploadService {
 
     let result: { url: string; tags: string[][]; sha256?: string }
     if (this.serviceConfig.type === 'nip96') {
-      result = await this.uploadByNip96(this.serviceConfig.service, safeFile, options)
+      try {
+        result = await this.uploadByNip96(this.serviceConfig.service, safeFile, options)
+      } catch (error) {
+        const fallbackServer = options?.fallbackBlossomServer
+        if (
+          !fallbackServer ||
+          options?.signal?.aborted ||
+          (error instanceof Error && error.message === UPLOAD_ABORTED_ERROR_MSG)
+        ) {
+          throw error
+        }
+        result = await this.uploadByBlossom(safeFile, options, [fallbackServer])
+      }
     } else {
       result = await this.uploadByBlossom(safeFile, options)
     }
@@ -103,7 +116,7 @@ class MediaUploadService {
     return tags
   }
 
-  private async uploadByBlossom(file: File, options?: UploadOptions) {
+  private async uploadByBlossom(file: File, options?: UploadOptions, serverOverride?: string[]) {
     const pubkey = client.pubkey
     const signer = async (draft: TDraftEvent) => {
       if (!client.signer) {
@@ -143,13 +156,17 @@ class MediaUploadService {
     }
     startPseudoProgress()
 
-    let servers = await client.fetchBlossomServerList(pubkey)
-    if (servers.length === 0) {
+    let servers = serverOverride ?? (await client.fetchBlossomServerList(pubkey))
+    if (!serverOverride && servers.length === 0) {
       // The user has no Blossom server list yet. Use the default servers for this
       // upload right away, and asynchronously create a server list for the user in
       // the background so it's persisted for next time.
       servers = RECOMMENDED_BLOSSOM_SERVERS
       this.ensureBlossomServerList(pubkey)
+    }
+    const fallbackServer = options?.fallbackBlossomServer
+    if (fallbackServer && !servers.includes(fallbackServer)) {
+      servers = [...servers, fallbackServer]
     }
     const auth = await BlossomClient.createUploadAuth(signer, file, {
       message: 'Uploading media file'
