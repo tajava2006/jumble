@@ -11,7 +11,7 @@ import {
   isReplaceableEvent,
   isReplyNoteEvent
 } from '@/lib/event'
-import { getDefaultRelayUrls } from '@/lib/relay'
+import { getDefaultRelayUrls, mergeRelayUrls } from '@/lib/relay'
 import { generateBech32IdFromETag } from '@/lib/tag'
 import client from '@/services/client.service'
 import indexedDb from '@/services/indexed-db.service'
@@ -79,13 +79,14 @@ class ThreadService {
         const relayList = await client.fetchRelayList(logicalPubkey)
         relayUrls = relayList.read
       }
-      relayUrls = relayUrls.concat(getDefaultRelayUrls()).slice(0, 4)
-
-      // If current event is protected, we can assume its replies are also protected and stored on the same relays
-      if (event && isProtectedEvent(event)) {
-        const seenOn = client.getSeenEventRelayUrls(event.id)
-        relayUrls.concat(...seenOn)
-      }
+      const seenOnRelayUrls = event ? client.getSeenEventRelayUrls(event.id) : []
+      const rootRelayUrls = rootInfo.type === 'A' && rootInfo.relay ? [rootInfo.relay] : []
+      relayUrls = mergeRelayUrls(5, relayUrls, getDefaultRelayUrls())
+      relayUrls =
+        event && isProtectedEvent(event)
+          ? mergeRelayUrls(relayUrls, seenOnRelayUrls)
+          : mergeRelayUrls(5, relayUrls, seenOnRelayUrls)
+      relayUrls = mergeRelayUrls(relayUrls, rootRelayUrls)
 
       const filters: (Omit<Filter, 'since' | 'until'> & {
         limit: number
@@ -116,9 +117,6 @@ class ThreadService {
             limit
           }
         )
-        if (rootInfo.relay) {
-          relayUrls.push(rootInfo.relay)
-        }
       } else {
         filters.push({
           '#I': [rootInfo.id],
@@ -150,7 +148,7 @@ class ThreadService {
       })
       const { closer, timelineKey } = await client.subscribeTimeline(
         filters.map((filter) => ({
-          urls: relayUrls.slice(0, 8),
+          urls: relayUrls,
           filter
         })),
         {

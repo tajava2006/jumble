@@ -19,6 +19,21 @@ export function getSearchRelayUrls() {
   return storage.getSearchRelayUrls()
 }
 
+export function mergeRelayUrls(...relayGroups: [string[], ...string[][]]): string[]
+export function mergeRelayUrls(limit: number, ...relayGroups: string[][]): string[]
+export function mergeRelayUrls(
+  limitOrRelayGroup: number | string[],
+  ...remainingRelayGroups: string[][]
+) {
+  const limit = typeof limitOrRelayGroup === 'number' ? limitOrRelayGroup : undefined
+  const relayGroups =
+    typeof limitOrRelayGroup === 'number'
+      ? remainingRelayGroups
+      : [limitOrRelayGroup, ...remainingRelayGroups]
+  const merged = Array.from(new Set(relayGroups.flat()))
+  return limit === undefined ? merged : merged.slice(0, limit)
+}
+
 export function checkAlgoRelay(relayInfo: TRelayInfo | undefined) {
   return relayInfo?.software === 'https://github.com/bitvora/algo-relay' // hardcode for now
 }
