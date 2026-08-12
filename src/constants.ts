@@ -606,5 +606,6 @@ export const POMEGRANATE_OPERATOR_URLS = [
   'https://po.jumble.social/',
   'https://po.coracle.social/',
   'https://po.njump.me/',
-  'https://po.f7z.io/'
+  'https://po.f7z.io/',
+  'https://po.yakihonne.com/'
 ]
