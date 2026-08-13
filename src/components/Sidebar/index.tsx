@@ -1,5 +1,6 @@
 import Icon from '@/assets/Icon'
 import Logo from '@/assets/Logo'
+import { SidebarSignerApprovalIndicator } from '@/components/SignerApprovalIndicator'
 import { IS_COMMUNITY_MODE } from '@/constants'
 import { cn } from '@/lib/utils'
 import { usePrimaryPage } from '@/PageManager'
@@ -67,6 +68,7 @@ export default function PrimaryPageSidebar() {
         <PostButton collapse={sidebarCollapse} />
       </div>
       <div className="flex flex-col gap-4">
+        <SidebarSignerApprovalIndicator collapsed={sidebarCollapse} />
         <UpdateButton collapse={sidebarCollapse} />
         <DesktopAppTip collapse={sidebarCollapse} />
         <LayoutSwitcher collapse={sidebarCollapse} />
