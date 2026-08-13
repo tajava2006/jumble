@@ -165,9 +165,12 @@ class MediaUploadService {
       this.ensureBlossomServerList(pubkey)
     }
     const fallbackServer = options?.fallbackBlossomServer
-    if (fallbackServer && !servers.includes(fallbackServer)) {
-      servers = [...servers, fallbackServer]
-    }
+    // Keep the fallback separate from the user's configured servers. It should
+    // only receive the file when every configured server rejects the upload;
+    // adding it to `servers` would also make it a mirror target after an earlier
+    // configured server succeeds.
+    const uploadServers =
+      fallbackServer && !servers.includes(fallbackServer) ? [...servers, fallbackServer] : servers
     const auth = await BlossomClient.createUploadAuth(signer, file, {
       message: 'Uploading media file'
     })
@@ -177,17 +180,18 @@ class MediaUploadService {
     // being used. Cancellation is different: it stops the whole upload rather
     // than moving on to another server.
     let blob: BlobDescriptor | undefined
-    let uploadedServerIndex = -1
+    let uploadedServer: string | undefined
+    const failedServers = new Set<string>()
     let lastError: unknown
     try {
-      for (const [index, server] of servers.entries()) {
+      for (const server of uploadServers) {
         if (options?.signal?.aborted) {
           throw new Error(UPLOAD_ABORTED_ERROR_MSG)
         }
 
         try {
           blob = await this.uploadBlobToBlossomServer(server, file, auth, options?.signal)
-          uploadedServerIndex = index
+          uploadedServer = server
           break
         } catch (error) {
           if (
@@ -196,6 +200,7 @@ class MediaUploadService {
           ) {
             throw new Error(UPLOAD_ABORTED_ERROR_MSG)
           }
+          failedServers.add(server)
           lastError = error
         }
       }
@@ -210,7 +215,12 @@ class MediaUploadService {
     // Primary upload finished
     options?.onProgress?.(80)
 
-    const mirrorServers = servers.filter((_, index) => index !== uploadedServerIndex)
+    // Mirror only to user-chosen servers that were not already attempted. An
+    // extra fallback must never become a mirror target, and retrying a server
+    // that just rejected the primary upload is unlikely to help.
+    const mirrorServers = servers.filter(
+      (server) => server !== uploadedServer && !failedServers.has(server)
+    )
     if (mirrorServers.length > 0) {
       await Promise.allSettled(
         mirrorServers.map((server) => BlossomClient.mirrorBlob(server, blob, { auth }))

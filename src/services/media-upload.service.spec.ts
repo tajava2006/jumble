@@ -59,7 +59,7 @@ describe('Blossom media uploads', () => {
     mediaUpload.setServiceConfig({ type: 'blossom' })
   })
 
-  it('tries servers in order until an upload succeeds', async () => {
+  it('tries servers in order and does not mirror back to a failed server', async () => {
     const blob = {
       url: 'https://second.example/file-hash',
       sha256: 'file-hash',
@@ -86,11 +86,10 @@ describe('Blossom media uploads', () => {
       'https://second.example/upload',
       'https://second.example/upload'
     ])
-    expect(blossomClientMock.mirrorBlob).toHaveBeenCalledTimes(2)
-    expect(blossomClientMock.mirrorBlob.mock.calls.map(([server]) => server)).toEqual([
-      servers[0],
-      servers[2]
-    ])
+    expect(blossomClientMock.mirrorBlob).toHaveBeenCalledTimes(1)
+    expect(blossomClientMock.mirrorBlob).toHaveBeenCalledWith(servers[2], blob, {
+      auth: expect.anything()
+    })
   })
 
   it('reports failure only after trying every server', async () => {
@@ -133,6 +132,35 @@ describe('Blossom media uploads', () => {
       ...servers.map((server) => `${server}upload`),
       `${JUMBLE_BLOSSOM_SERVER}upload`,
       `${JUMBLE_BLOSSOM_SERVER}upload`
+    ])
+    expect(blossomClientMock.mirrorBlob).not.toHaveBeenCalled()
+  })
+
+  it('does not mirror to the fallback when a configured server succeeds', async () => {
+    const blob = {
+      url: 'https://first.example/file-hash',
+      sha256: 'file-hash',
+      size: 4,
+      type: 'application/octet-stream'
+    }
+    const fetchMock = vi.fn(async (_input: URL | RequestInfo, init?: RequestInit) =>
+      init?.method === 'HEAD' ? new Response(null, { status: 200 }) : Response.json(blob)
+    )
+    vi.stubGlobal('fetch', fetchMock)
+
+    const result = await mediaUpload.upload(
+      new File(['test'], 'encrypted.bin', { type: 'application/octet-stream' }),
+      { fallbackBlossomServer: JUMBLE_BLOSSOM_SERVER }
+    )
+
+    expect(result.url).toBe(blob.url)
+    expect(fetchMock.mock.calls.map(([input]) => input.toString())).toEqual([
+      `${servers[0]}upload`,
+      `${servers[0]}upload`
+    ])
+    expect(blossomClientMock.mirrorBlob.mock.calls.map(([server]) => server)).toEqual([
+      servers[1],
+      servers[2]
     ])
   })
 
