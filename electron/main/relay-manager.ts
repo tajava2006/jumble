@@ -1,10 +1,5 @@
-import type { BrowserWindow } from 'electron'
-import type {
-  Event as NEvent,
-  EventTemplate,
-  Filter,
-  VerifiedEvent
-} from 'nostr-tools'
+import { app, type BrowserWindow } from 'electron'
+import type { Event as NEvent, EventTemplate, Filter, VerifiedEvent } from 'nostr-tools'
 import { randomUUID } from 'node:crypto'
 import WebSocket from 'ws'
 import { SmartPool, type SmartPoolOptions } from '../../src/lib/smart-pool'
@@ -20,12 +15,24 @@ import {
 type SubCloser = { close: () => void }
 
 const DEFAULT_PUBLISH_TIMEOUT = 10_000
+const USER_AGENT = `Jumble/${app.getVersion()} (Desktop; Electron)`
+
+class ElectronWebSocket extends WebSocket {
+  constructor(address: string | URL, protocols?: string | string[]) {
+    super(address, protocols, {
+      headers: {
+        'User-Agent': USER_AGENT
+      }
+    })
+  }
+}
 
 export class RelayManager {
   // ws implements the WebSocket surface nostr-tools uses, but its Node types
   // intentionally do not include the browser-only EventTarget methods.
   private pool = new SmartPool({
-    websocketImplementation: WebSocket as unknown as SmartPoolOptions['websocketImplementation']
+    websocketImplementation:
+      ElectronWebSocket as unknown as SmartPoolOptions['websocketImplementation']
   })
   private subs = new Map<string, SubCloser>()
   private pendingAuthRequests = new Map<
