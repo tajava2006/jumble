@@ -7,6 +7,7 @@ import path from 'node:path'
 import { registerIpcHandlers, unregisterIpcHandlers } from './ipc.js'
 import { MediaServer } from './media-server.js'
 import { RelayManager } from './relay-manager.js'
+import { isRendererFrameUrl } from './renderer-frame.js'
 import { SecretsStore } from './secrets-store.js'
 import { Updater } from './updater.js'
 import { attachWindowStatePersistence, loadWindowState } from './window-state.js'
@@ -160,16 +161,7 @@ app.whenReady().then(async () => {
   // iframes (e.g. the YouTube shim and its YT child frames) make credentialed
   // XHRs where `ACAO: *` is rejected by spec.
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
-    let frameOrigin: string | null = null
-    const frameUrl = details.frame?.url
-    if (frameUrl) {
-      try {
-        frameOrigin = new URL(frameUrl).origin
-      } catch {
-        // ignore unparseable URLs
-      }
-    }
-    if (frameOrigin !== rendererOrigin) {
+    if (!isRendererFrameUrl(details.frame?.url, rendererOrigin)) {
       callback({})
       return
     }

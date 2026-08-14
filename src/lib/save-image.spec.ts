@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { saveImage, type PreparedImage } from './save-image'
+import { downloadImage, saveImage, type PreparedImage } from './save-image'
 
 const preparedImage: PreparedImage = {
   blob: new Blob(['image'], { type: 'image/png' }),
@@ -55,6 +55,55 @@ describe('saveImage', () => {
   })
 })
 
+describe('downloadImage', () => {
+  it('downloads a fetched cross-origin image as a blob', async () => {
+    vi.stubGlobal('navigator', createDesktopNavigator())
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(new Blob(['downloaded image'], { type: 'image/png' }), { status: 200 })
+        )
+      )
+    )
+    const saveAs = vi.fn()
+
+    await downloadImage('https://example.com/image.png', undefined, saveAs)
+
+    expect(saveAs).toHaveBeenCalledWith(expect.any(Blob), 'image.png')
+  })
+
+  it('opens the original image when CORS prevents fetching it', async () => {
+    vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+    vi.stubGlobal('navigator', createDesktopNavigator())
+    vi.stubGlobal('window', { location: { href: 'https://beta.jumble.social' } })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => Promise.reject(new TypeError('Failed to fetch')))
+    )
+    const link = {
+      click: vi.fn(),
+      download: '',
+      href: '',
+      rel: '',
+      target: ''
+    }
+    vi.stubGlobal('document', { createElement: vi.fn(() => link) })
+    const saveAs = vi.fn()
+
+    await downloadImage('https://example.com/image.png', undefined, saveAs)
+
+    expect(saveAs).not.toHaveBeenCalled()
+    expect(link).toMatchObject({
+      download: 'image.png',
+      href: 'https://example.com/image.png',
+      rel: 'noopener noreferrer',
+      target: '_blank'
+    })
+    expect(link.click).toHaveBeenCalledOnce()
+  })
+})
+
 function createMobileNavigator(share: (data?: ShareData) => Promise<void>) {
   return {
     canShare: () => true,
@@ -62,5 +111,13 @@ function createMobileNavigator(share: (data?: ShareData) => Promise<void>) {
     platform: 'iPhone',
     share,
     userAgent: 'iPhone'
+  }
+}
+
+function createDesktopNavigator() {
+  return {
+    maxTouchPoints: 0,
+    platform: 'MacIntel',
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'
   }
 }

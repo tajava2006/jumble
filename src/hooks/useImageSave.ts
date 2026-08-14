@@ -1,6 +1,6 @@
 import {
+  downloadImage,
   prepareImageForSave,
-  saveImage,
   shouldPrepareImageForShare,
   type PreparedImage,
   type SaveAs
@@ -28,7 +28,7 @@ export function useImageSave(url: string | undefined, enabled: boolean) {
 
   return useCallback(
     (saveAs: SaveAs) => {
-      if (url) saveImage(url, preparedImage, saveAs)
+      if (url) void downloadImage(url, preparedImage, saveAs)
     },
     [preparedImage, url]
   )

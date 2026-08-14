@@ -1,4 +1,5 @@
 import { isMobileOperatingSystem } from './device'
+import { getSafeExternalUrl } from './url'
 
 export type SaveAs = (source: string | Blob, name?: string) => void
 
@@ -6,6 +7,35 @@ export type PreparedImage = {
   blob: Blob
   file: File
   filename: string
+}
+
+export async function downloadImage(
+  url: string,
+  preparedImage: PreparedImage | undefined,
+  saveAs: SaveAs
+) {
+  if (preparedImage) {
+    saveImage(url, preparedImage, saveAs)
+    return
+  }
+
+  // Mobile sharing must be triggered synchronously from the user gesture. If
+  // preloading failed or has not finished, fall back to the original image.
+  if (shouldPrepareImageForShare()) {
+    openImageForSave(url)
+    return
+  }
+
+  try {
+    const image = await prepareImageForSave(url)
+    saveImage(url, image, saveAs)
+  } catch (error) {
+    // Browsers cannot read a cross-origin response when the final redirect
+    // target omits ACAO. Opening the image itself is the only frontend-only
+    // fallback; a guaranteed forced download requires a same-origin proxy.
+    console.warn('Unable to download image as a blob; opening the original URL', error)
+    openImageForSave(url)
+  }
 }
 
 export async function prepareImageForSave(
@@ -67,6 +97,18 @@ export function saveImage(url: string, preparedImage: PreparedImage | undefined,
     console.warn('Failed to share image with the system', error)
     download()
   }
+}
+
+function openImageForSave(url: string) {
+  const safeUrl = getSafeExternalUrl(url)
+  if (!safeUrl) return
+
+  const link = document.createElement('a')
+  link.href = safeUrl
+  link.download = getImageFilename(safeUrl)
+  link.target = '_blank'
+  link.rel = 'noopener noreferrer'
+  link.click()
 }
 
 function getImageFilename(url: string, mimeType?: string) {
