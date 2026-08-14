@@ -1,4 +1,3 @@
-import { isElectron } from '@/lib/platform'
 import { isInsecureUrl } from '@/lib/url'
 import { useUserPreferences } from '@/providers/UserPreferencesProvider'
 import webService from '@/services/web.service'
@@ -6,7 +5,7 @@ import { TWebMetadata } from '@/types'
 import { useEffect, useState } from 'react'
 
 type WebMetadataState = {
-  requestUrl: string
+  url: string
   metadata: TWebMetadata
   isLoading: boolean
 }
@@ -14,43 +13,36 @@ type WebMetadataState = {
 export function useFetchWebMetadata(url: string, enabled = true) {
   const { allowInsecureConnection } = useUserPreferences()
   const [state, setState] = useState<WebMetadataState>({
-    requestUrl: '',
+    url: '',
     metadata: {},
     isLoading: false
   })
-  const proxyServer = import.meta.env.VITE_PROXY_SERVER
-  let requestUrl = url
-  // In Electron mode the main process fetches directly (no CORS), so the
-  // browser-side proxy rewrite is unnecessary and would defeat the point.
-  if (proxyServer && !isElectron()) {
-    requestUrl = `${proxyServer}/sites/${encodeURIComponent(url)}`
-  }
 
   useEffect(() => {
     if (!enabled || (!allowInsecureConnection && isInsecureUrl(url))) return
 
     let ignore = false
-    setState({ requestUrl, metadata: {}, isLoading: true })
+    setState({ url, metadata: {}, isLoading: true })
 
     webService
-      .fetchWebMetadata(requestUrl, url)
+      .fetchWebMetadata(url)
       .then((metadata) => {
-        if (!ignore) setState({ requestUrl, metadata, isLoading: false })
+        if (!ignore) setState({ url, metadata, isLoading: false })
       })
       .catch(() => {
-        if (!ignore) setState({ requestUrl, metadata: {}, isLoading: false })
+        if (!ignore) setState({ url, metadata: {}, isLoading: false })
       })
 
     return () => {
       ignore = true
     }
-  }, [url, requestUrl, enabled, allowInsecureConnection])
+  }, [url, enabled, allowInsecureConnection])
 
   if (!enabled) {
     return { metadata: {}, isLoading: false }
   }
 
-  if (state.requestUrl !== requestUrl) {
+  if (state.url !== url) {
     return { metadata: {}, isLoading: true }
   }
 

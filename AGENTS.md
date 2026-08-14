@@ -116,7 +116,7 @@ Service files located in `src/services/` encapsulate business logic:
 - `note-stats.service.ts` - Note statistics storage and retrieval (likes, zaps, reposts)
 - `poll-results.service.ts` - Poll results storage and retrieval
 - `post-editor-cache.service.ts` - Caching post editor content to prevent data loss
-- `web.push.service.ts` - Web metadata fetching for link previews
+- `web.service.ts` - Web metadata fetching for link previews (via the link preview metadata service, see `LINK_PREVIEW_SERVER` in `src/constants.ts`, overridable with `VITE_LINK_PREVIEW_SERVER`)
 
 ### Providers Architecture
 
@@ -387,7 +387,7 @@ When adding a new IPC channel:
 | Relay WebSockets | renderer (`SmartPool`) | main (`SmartPool` + `RelayManager`) |
 | Signing (`ISigner`) | renderer | renderer (unchanged) |
 | Secret storage | localStorage | `safeStorage` file in `userData/` |
-| Cross-origin HTTP fetch | direct or `VITE_PROXY_SERVER` | `bridge.proxy.fetch` |
+| Cross-origin HTTP fetch | direct | `bridge.proxy.fetch` |
 | IndexedDB caches | renderer | renderer (unchanged) |
 | PWA / service worker | enabled | disabled (vite-plugin-pwa skipped) |
 

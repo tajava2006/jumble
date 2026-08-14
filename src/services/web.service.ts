@@ -1,3 +1,4 @@
+import { LINK_PREVIEW_SERVER } from '@/constants'
 import { BoundedMap } from '@/lib/bounded-map'
 import { proxyFetch } from '@/lib/proxy-fetch'
 import { TWebMetadata } from '@/types'
@@ -8,15 +9,7 @@ class WebService {
 
   private webMetadataDataLoader = new DataLoader<string, TWebMetadata>(
     async (keys) => {
-      return await Promise.all(
-        keys.map((key) => {
-          const { requestUrl, sourceUrl } = JSON.parse(key) as {
-            requestUrl: string
-            sourceUrl: string
-          }
-          return this.fetchOne(requestUrl, sourceUrl)
-        })
-      )
+      return await Promise.all(keys.map((url) => this.fetchOne(url)))
     },
     {
       maxBatchSize: 1,
@@ -31,59 +24,27 @@ class WebService {
     return WebService.instance
   }
 
-  async fetchWebMetadata(requestUrl: string, sourceUrl = requestUrl) {
-    return await this.webMetadataDataLoader.load(JSON.stringify({ requestUrl, sourceUrl }))
+  async fetchWebMetadata(url: string) {
+    return await this.webMetadataDataLoader.load(url)
   }
 
-  private async fetchOne(requestUrl: string, sourceUrl: string): Promise<TWebMetadata> {
+  private async fetchOne(url: string): Promise<TWebMetadata> {
     try {
-      const res = await proxyFetch(requestUrl, {
-        headers: { accept: 'text/html,application/xhtml+xml' }
+      const res = await proxyFetch(`${LINK_PREVIEW_SERVER}/?url=${encodeURIComponent(url)}`, {
+        headers: { accept: 'application/json' }
       })
       if (!res.ok) return {}
-      const ct = res.headers['content-type'] ?? ''
-      if (!ct.includes('text/html') && !ct.includes('application/xhtml')) return {}
-      const html = res.body
-      if (!html) return {}
 
-      const parser = new DOMParser()
-      const doc = parser.parseFromString(html, 'text/html')
+      const data = JSON.parse(res.body) as Partial<Record<string, string | null>>
 
-      const title = (
-        doc.querySelector('meta[property="og:title"]')?.getAttribute('content') ||
-        doc.querySelector('meta[name="twitter:title"]')?.getAttribute('content') ||
-        doc.querySelector('title')?.textContent
-      )?.trim()
-      const description = (
-        doc.querySelector('meta[property="og:description"]')?.getAttribute('content') ||
-        doc.querySelector('meta[name="twitter:description"]')?.getAttribute('content') ||
-        (doc.querySelector('meta[name="description"]') as HTMLMetaElement | null)?.content
-      )?.trim()
-      const rawImage = (
-        (doc.querySelector('meta[property="og:image"]') as HTMLMetaElement | null)?.content ||
-        (doc.querySelector('meta[property="og:image:secure_url"]') as HTMLMetaElement | null)
-          ?.content ||
-        (doc.querySelector('meta[name="twitter:image"]') as HTMLMetaElement | null)?.content
-      )?.trim()
-      const documentUrl = requestUrl === sourceUrl ? res.url || sourceUrl : sourceUrl
-      const image = resolveHttpUrl(rawImage, documentUrl)
-
-      return { title, description, image }
+      return {
+        title: data.title,
+        description: data.description,
+        image: data.image
+      }
     } catch {
       return {}
     }
-  }
-}
-
-function resolveHttpUrl(value: string | undefined, baseUrl: string) {
-  if (!value) return undefined
-
-  try {
-    const resolved = new URL(value, baseUrl)
-    if (resolved.protocol !== 'http:' && resolved.protocol !== 'https:') return undefined
-    return resolved.toString()
-  } catch {
-    return undefined
   }
 }
 

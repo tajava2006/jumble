@@ -599,6 +599,11 @@ export const COMMUNITY_RELAYS = import.meta.env.VITE_COMMUNITY_RELAYS as string[
 
 export const IS_COMMUNITY_MODE = COMMUNITY_RELAY_SETS.length > 0 || COMMUNITY_RELAYS.length > 0
 
+// Link preview metadata service. Override via VITE_LINK_PREVIEW_SERVER.
+export const LINK_PREVIEW_SERVER =
+  (import.meta.env.VITE_LINK_PREVIEW_SERVER as string | undefined) ??
+  'https://scout.jumble.social'
+
 // Pomegranate (threshold-key-shard NIP-46 remote signer) — "Login with Google".
 export const POMEGRANATE_ENABLED = true
 export const POMEGRANATE_CENTRAL_URL = 'https://auth.njump.me/'
