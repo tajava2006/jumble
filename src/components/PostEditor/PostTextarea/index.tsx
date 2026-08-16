@@ -122,7 +122,11 @@ const PostTextarea = forwardRef<
           suggestion: emojiSuggestion
         }),
         Mention.configure({
-          suggestion: mentionSuggestion
+          suggestion: mentionSuggestion,
+          // Treat a mention as a single editor token. TipTap otherwise replaces
+          // it with the suggestion trigger (`@`) on Backspace, which leaves an
+          // unexpected character behind and can put the caret on its wrong side.
+          deleteTriggerWithBackspace: true
         }),
         ClipboardAndDropHandler.configure({
           onUploadStart: (file, cancel) => {
