@@ -176,6 +176,7 @@ export default function DmInput({
   const [emojiIndex, setEmojiIndex] = useState(0)
   const [isFocused, setIsFocused] = useState(false)
   const emojisRef = useRef<Map<string, TEmoji>>(new Map())
+  const sendButtonRef = useRef<HTMLButtonElement>(null)
 
   const isUploading = mediaItems.some((item) => item.status === 'uploading')
   const doneItems = mediaItems.filter((item) => item.status === 'done')
@@ -813,7 +814,26 @@ export default function DmInput({
           </DndContext>
         </div>
       )}
-      <div className="flex items-end gap-2">
+      <div
+        className="flex items-end gap-2"
+        onPointerDown={(e) => {
+          if (e.pointerType === 'mouse' || !canSend) return
+
+          const sendButtonRect = sendButtonRef.current?.getBoundingClientRect()
+          if (!sendButtonRect) return
+
+          const horizontalHitSlop = 16
+          if (
+            e.clientX < sendButtonRect.left - horizontalHitSlop ||
+            e.clientX > sendButtonRect.right + horizontalHitSlop
+          ) {
+            return
+          }
+
+          e.preventDefault()
+          handleSend()
+        }}
+      >
         <div>
           <button
             onMouseDown={(e) => {
@@ -897,6 +917,7 @@ export default function DmInput({
           />
         </div>
         <button
+          ref={sendButtonRef}
           onMouseDown={(e) => {
             e.preventDefault()
             handleSend()
