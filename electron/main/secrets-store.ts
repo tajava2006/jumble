@@ -8,6 +8,7 @@ const FILE_NAME = 'secrets.enc'
 export class SecretsStore {
   private filePath: string
   private writeChain: Promise<void> = Promise.resolve()
+  private loadPromise: Promise<TSecretsBundle> | null = null
 
   constructor() {
     this.filePath = path.join(app.getPath('userData'), FILE_NAME)
@@ -17,7 +18,24 @@ export class SecretsStore {
     return safeStorage.isEncryptionAvailable()
   }
 
-  async load(): Promise<TSecretsBundle> {
+  preload(): Promise<TSecretsBundle> {
+    if (!this.loadPromise) {
+      this.loadPromise = this.loadFromDisk().catch((error) => {
+        this.loadPromise = null
+        throw error
+      })
+    }
+    return this.loadPromise
+  }
+
+  load(): Promise<TSecretsBundle> {
+    return this.preload()
+  }
+
+  private async loadFromDisk(): Promise<TSecretsBundle> {
+    if (!safeStorage.isEncryptionAvailable()) {
+      throw new Error('safeStorage not available — cannot decrypt secrets')
+    }
     let buf: Buffer
     try {
       buf = await fs.readFile(this.filePath)
@@ -26,9 +44,6 @@ export class SecretsStore {
       throw err
     }
     if (buf.length === 0) return {}
-    if (!safeStorage.isEncryptionAvailable()) {
-      throw new Error('safeStorage not available — cannot decrypt secrets')
-    }
     const text = safeStorage.decryptString(buf)
     if (!text) return {}
     try {

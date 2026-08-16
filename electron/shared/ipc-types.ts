@@ -17,6 +17,8 @@ export const IPC_CHANNELS = {
   secretsLoad: 'secrets:load',
   secretsSave: 'secrets:save',
   secretsAvailable: 'secrets:available',
+  localStorageLoad: 'local-storage:load',
+  localStorageSave: 'local-storage:save',
   updateCheck: 'update:check',
   updateDownload: 'update:download',
   updateInstall: 'update:install',
@@ -24,7 +26,9 @@ export const IPC_CHANNELS = {
   updateState: 'update:state',
   updateSetAuto: 'update:set-auto',
   proxyFetch: 'proxy:fetch',
-  mediaGetShimOrigin: 'media:get-shim-origin'
+  mediaGetShimOrigin: 'media:get-shim-origin',
+  pomegranateAuthenticate: 'pomegranate:authenticate',
+  pomegranateRecover: 'pomegranate:recover'
 } as const
 
 export type TSecretsBundle = {
@@ -39,6 +43,17 @@ export type TSecretsBridge = {
   isAvailable: () => Promise<boolean>
   load: () => Promise<TSecretsBundle>
   save: (bundle: TSecretsBundle) => Promise<void>
+}
+
+export type TLocalStorageSnapshot = {
+  version: 1
+  revision: number
+  entries: Record<string, string>
+}
+
+export type TLocalStorageBridge = {
+  load: () => Promise<TLocalStorageSnapshot | null>
+  save: (snapshot: TLocalStorageSnapshot) => Promise<void>
 }
 
 export type TSubEventPayload = {
@@ -158,10 +173,21 @@ export type TMediaBridge = {
   getShimOrigin: () => Promise<string | null>
 }
 
+export type TPomegranateAuthPurpose = 'login' | 'bind' | 'disconnect' | 'recovery'
+
+export type TPomegranateBridge = {
+  /** Opens Pomegranate authentication in the system browser and returns its postMessage result. */
+  authenticate: (url: string, purpose: TPomegranateAuthPurpose) => Promise<string>
+  /** Runs central + operator recovery from one system-browser coordinator page. */
+  recover: (centralLoginUrl: string, expectedPubkey: string) => Promise<{ shards: string[] }>
+}
+
 export type TElectronBridge = {
   relay: TElectronRelayBridge
   secrets: TSecretsBridge
+  localStorage: TLocalStorageBridge
   update: TUpdateBridge
   proxy: TProxyBridge
   media: TMediaBridge
+  pomegranate: TPomegranateBridge
 }

@@ -5,6 +5,8 @@ import {
   TAuthRequestPayload,
   TAuthResponsePayload,
   TElectronBridge,
+  TLocalStorageSnapshot,
+  TPomegranateAuthPurpose,
   TProxyFetchOptions,
   TSecretsBundle,
   TSubClosePayload,
@@ -54,6 +56,11 @@ const bridge: TElectronBridge = {
     load: () => ipcRenderer.invoke(IPC_CHANNELS.secretsLoad),
     save: (bundle: TSecretsBundle) => ipcRenderer.invoke(IPC_CHANNELS.secretsSave, bundle)
   },
+  localStorage: {
+    load: () => ipcRenderer.invoke(IPC_CHANNELS.localStorageLoad),
+    save: (snapshot: TLocalStorageSnapshot) =>
+      ipcRenderer.invoke(IPC_CHANNELS.localStorageSave, snapshot)
+  },
   update: {
     check: () => ipcRenderer.invoke(IPC_CHANNELS.updateCheck),
     download: () => ipcRenderer.invoke(IPC_CHANNELS.updateDownload),
@@ -72,6 +79,12 @@ const bridge: TElectronBridge = {
   },
   media: {
     getShimOrigin: () => ipcRenderer.invoke(IPC_CHANNELS.mediaGetShimOrigin)
+  },
+  pomegranate: {
+    authenticate: (url: string, purpose: TPomegranateAuthPurpose) =>
+      ipcRenderer.invoke(IPC_CHANNELS.pomegranateAuthenticate, url, purpose),
+    recover: (centralLoginUrl: string, expectedPubkey: string) =>
+      ipcRenderer.invoke(IPC_CHANNELS.pomegranateRecover, centralLoginUrl, expectedPubkey)
   }
 }
 

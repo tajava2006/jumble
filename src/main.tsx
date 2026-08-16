@@ -1,15 +1,7 @@
-import './i18n'
 import './index.css'
 import './polyfill'
-import './services/lightning.service'
 
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
-import { ErrorBoundary } from './components/ErrorBoundary.tsx'
-import blossomCache from './services/blossom-cache.service'
-import storage from './services/local-storage.service'
-import postDraftService from './services/post-draft.service'
+import { restoreElectronLocalStorage } from './lib/electron-local-storage'
 
 const setVh = () => {
   document.documentElement.style.setProperty('--vh', `${window.innerHeight}px`)
@@ -18,26 +10,17 @@ window.addEventListener('resize', setVh)
 window.addEventListener('orientationchange', setVh)
 setVh()
 
-const root = createRoot(document.getElementById('root')!)
+const bootstrap = async () => {
+  // Electron restores its main-process snapshot before modules that read
+  // localStorage are evaluated. Web mode returns immediately.
+  await restoreElectronLocalStorage()
 
-Promise.allSettled([
-  storage.hydrate().catch((err) => {
-    console.error('[main] storage hydrate failed:', err)
-  }),
-  postDraftService.init().catch((err) => {
-    console.error('[main] post draft init failed:', err)
-  })
-]).finally(() => {
-  // Fire-and-forget: storage is hydrated by now, so re-verify a previously
-  // enabled cache server in the background without blocking the first render.
-  blossomCache.init().catch((err) => {
-    console.error('[main] blossom cache init failed:', err)
-  })
-  root.render(
-    <StrictMode>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
-    </StrictMode>
-  )
+  // This is the only deferred module boundary: application modules must not
+  // read localStorage until Electron has restored its durable snapshot.
+  const { startApplication } = await import('./app-bootstrap')
+  await startApplication()
+}
+
+bootstrap().catch((error) => {
+  console.error('[main] failed to bootstrap application:', error)
 })

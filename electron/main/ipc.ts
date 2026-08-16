@@ -3,12 +3,16 @@ import type { Event as NEvent, Filter } from 'nostr-tools'
 import {
   IPC_CHANNELS,
   TAuthResponsePayload,
+  TLocalStorageSnapshot,
+  TPomegranateAuthPurpose,
   TProxyFetchOptions,
   TSecretsBundle
 } from '../shared/ipc-types.js'
 import type { MediaServer } from './media-server.js'
+import type { PomegranateAuthServer } from './pomegranate-auth-server.js'
 import { proxyFetch } from './proxy-fetch.js'
 import type { RelayManager } from './relay-manager.js'
+import type { RendererStorageStore } from './renderer-storage-store.js'
 import type { SecretsStore } from './secrets-store.js'
 import type { Updater } from './updater.js'
 
@@ -16,7 +20,9 @@ export function registerIpcHandlers(
   manager: RelayManager,
   secrets: SecretsStore,
   updater: Updater,
-  mediaServer: MediaServer
+  mediaServer: MediaServer,
+  pomegranateAuthServer: PomegranateAuthServer,
+  rendererStorage: RendererStorageStore
 ) {
   ipcMain.handle(IPC_CHANNELS.ensure, (_e, url: string) => manager.ensure(url))
 
@@ -49,6 +55,10 @@ export function registerIpcHandlers(
   ipcMain.handle(IPC_CHANNELS.secretsAvailable, () => secrets.isAvailable())
   ipcMain.handle(IPC_CHANNELS.secretsLoad, () => secrets.load())
   ipcMain.handle(IPC_CHANNELS.secretsSave, (_e, bundle: TSecretsBundle) => secrets.save(bundle))
+  ipcMain.handle(IPC_CHANNELS.localStorageLoad, () => rendererStorage.load())
+  ipcMain.handle(IPC_CHANNELS.localStorageSave, (_e, snapshot: TLocalStorageSnapshot) =>
+    rendererStorage.save(snapshot)
+  )
 
   ipcMain.handle(IPC_CHANNELS.updateCheck, () => updater.check())
   ipcMain.handle(IPC_CHANNELS.updateDownload, () => updater.download())
@@ -62,7 +72,19 @@ export function registerIpcHandlers(
     proxyFetch(url, options)
   )
 
-  ipcMain.handle(IPC_CHANNELS.mediaGetShimOrigin, () => mediaServer.getUrl())
+  // The YouTube shim is not part of application startup. Bind its loopback
+  // server only when a YouTube player actually needs it.
+  ipcMain.handle(IPC_CHANNELS.mediaGetShimOrigin, () => mediaServer.start())
+  ipcMain.handle(
+    IPC_CHANNELS.pomegranateAuthenticate,
+    (_e, url: string, purpose: TPomegranateAuthPurpose) =>
+      pomegranateAuthServer.authenticate(url, purpose)
+  )
+  ipcMain.handle(
+    IPC_CHANNELS.pomegranateRecover,
+    (_e, centralLoginUrl: string, expectedPubkey: string) =>
+      pomegranateAuthServer.recover(centralLoginUrl, expectedPubkey)
+  )
 }
 
 export function unregisterIpcHandlers() {

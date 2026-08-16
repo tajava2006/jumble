@@ -79,6 +79,10 @@ class PostDraftService extends EventTarget {
    * event (same id) means relays dedupe, so re-sending is safe.
    */
   resumePending(pubkey: string): void {
+    void this.init().then(() => this.resumePendingAfterInit(pubkey))
+  }
+
+  private resumePendingAfterInit(pubkey: string): void {
     for (const d of this.map.values()) {
       if (d.pubkey === pubkey && d.status === 'pending' && !this.inflight.has(d.id)) {
         void this.startPublish(d as TPostDraftSigned, { silent: true }).catch(() => {})

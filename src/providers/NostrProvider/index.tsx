@@ -674,7 +674,8 @@ export function NostrProvider({ children }: { children: React.ReactNode }) {
       }
       return login(npubSigner, account)
     }
-    storage.removeAccount(account)
+    // Missing credentials can be caused by a transient safeStorage or IPC
+    // failure. Automatic login must never turn that into destructive logout.
     return null
   }
 

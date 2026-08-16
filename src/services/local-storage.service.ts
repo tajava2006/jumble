@@ -99,6 +99,7 @@ class LocalStorageService {
   private bunkerClientSecretByPubkey: Record<string, string> = {}
   // True when secrets persist via main-process safeStorage (Electron) instead of localStorage.
   private secretsViaIpc = false
+  private secretsWriteBlocked = false
   private secretsHydrated = false
   private secretsWriteChain: Promise<void> = Promise.resolve()
   private lastReadDmTimeMap: Record<string, Record<string, number>> = {}
@@ -722,6 +723,9 @@ class LocalStorageService {
 
     const bridge = getElectronBridge()
     if (!isElectron() || !bridge) return
+    // Electron must never fall back to writing secrets into localStorage,
+    // even when safeStorage is temporarily unavailable.
+    this.secretsViaIpc = true
 
     let available = false
     try {
@@ -730,29 +734,22 @@ class LocalStorageService {
       available = false
     }
 
-    // Discard anything peeled out of localStorage; main-process file is the
-    // sole source of truth in Electron mode.
-    this.nsecByPubkey = {}
-    this.ncryptsecByPubkey = {}
-    this.bunkerClientSecretByPubkey = {}
-    this.encryptionKeyPrivkeyMap = {}
-    this.retiredEncryptionKeyMap = {}
-
     if (available) {
-      this.secretsViaIpc = true
       try {
         const bundle = await bridge.secrets.load()
         const hadPersistedClientKey = 'clientKeyPrivkey' in bundle
-        Object.assign(this.nsecByPubkey, bundle.nsec ?? {})
-        Object.assign(this.ncryptsecByPubkey, bundle.ncryptsec ?? {})
-        Object.assign(this.bunkerClientSecretByPubkey, bundle.bunkerClientSecretKey ?? {})
-        Object.assign(this.encryptionKeyPrivkeyMap, bundle.encryptionKeyPrivkey ?? {})
-        Object.assign(this.retiredEncryptionKeyMap, bundle.retiredEncryptionKeyPrivkey ?? {})
+        this.nsecByPubkey = { ...(bundle.nsec ?? {}) }
+        this.ncryptsecByPubkey = { ...(bundle.ncryptsec ?? {}) }
+        this.bunkerClientSecretByPubkey = { ...(bundle.bunkerClientSecretKey ?? {}) }
+        this.encryptionKeyPrivkeyMap = { ...(bundle.encryptionKeyPrivkey ?? {}) }
+        this.retiredEncryptionKeyMap = { ...(bundle.retiredEncryptionKeyPrivkey ?? {}) }
         if (hadPersistedClientKey) this.queueSecretsSave()
       } catch (err) {
+        this.secretsWriteBlocked = true
         console.error('[storage] failed to load encrypted secrets:', err)
       }
     } else {
+      this.secretsWriteBlocked = true
       console.warn(
         '[storage] safeStorage not available — secrets stay in-memory and will be lost on quit'
       )
@@ -862,6 +859,7 @@ class LocalStorageService {
   }
 
   private queueSecretsSave() {
+    if (this.secretsWriteBlocked) return
     const bridge = getElectronBridge()
     if (!bridge) return
     const snapshot = {
