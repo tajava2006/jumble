@@ -1152,6 +1152,19 @@ export default {
     'One-time identity': 'Identità monouso',
     'Try loading more': 'Prova a caricarne altri',
     'Show less': 'Mostra meno',
-    'Remember this difficulty': 'Ricorda questa difficoltà'
+    'Remember this difficulty': 'Ricorda questa difficoltà',
+    'Unlock Jumble': 'Sblocca Jumble',
+    'No system keychain available': 'Nessun portachiavi di sistema disponibile',
+    'Password storage explanation':
+      "Questo dispositivo non ha un portachiavi di sistema, quindi Jumble cifra i tuoi dati locali (sessioni di accesso, chiavi private) con una password. Ti verrà richiesta a ogni avvio dell'app.",
+    'Create password': 'Crea password',
+    'Confirm password': 'Conferma password',
+    Unlock: 'Sblocca',
+    'Incorrect password': 'Password errata',
+    'Password must be at least 4 characters': 'La password deve contenere almeno 4 caratteri',
+    'Forgot password?': 'Password dimenticata?',
+    'Reset encrypted data': 'Reimposta dati crittografati',
+    'Reset encrypted data warning':
+      "Se hai dimenticato la password, puoi reimpostare i dati crittografati. Questo elimina permanentemente tutte le sessioni di accesso e le chiavi private salvate su questo dispositivo. L'operazione non può essere annullata."
   }
 }

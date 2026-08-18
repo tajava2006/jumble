@@ -1131,6 +1131,19 @@ export default {
     'One-time identity': '일회용 신원',
     'Try loading more': '더 불러오기',
     'Show less': '접기',
-    'Remember this difficulty': '이 난이도 기억하기'
+    'Remember this difficulty': '이 난이도 기억하기',
+    'Unlock Jumble': 'Jumble 잠금 해제',
+    'No system keychain available': '시스템 키링을 사용할 수 없습니다',
+    'Password storage explanation':
+      '이 기기에는 시스템 키링이 없으므로 Jumble은 대신 비밀번호로 로컬 데이터(로그인 세션, 개인 키)를 암호화합니다. 앱을 시작할 때마다 비밀번호를 입력해야 합니다.',
+    'Create password': '비밀번호 만들기',
+    'Confirm password': '비밀번호 확인',
+    Unlock: '잠금 해제',
+    'Incorrect password': '비밀번호가 올바르지 않습니다',
+    'Password must be at least 4 characters': '비밀번호는 4자 이상이어야 합니다',
+    'Forgot password?': '비밀번호를 잊으셨나요?',
+    'Reset encrypted data': '암호화된 데이터 초기화',
+    'Reset encrypted data warning':
+      '비밀번호를 잊었다면 암호화된 데이터를 초기화할 수 있습니다. 이 기기에 저장된 모든 로그인 세션과 개인 키가 영구적으로 삭제되며 되돌릴 수 없습니다.'
   }
 }

@@ -2,6 +2,7 @@ import './index.css'
 import './polyfill'
 
 import { restoreElectronLocalStorage } from './lib/electron-local-storage'
+import { ensureElectronStorageUnlocked } from './lib/electron-unlock'
 
 const setVh = () => {
   document.documentElement.style.setProperty('--vh', `${window.innerHeight}px`)
@@ -11,6 +12,11 @@ window.addEventListener('orientationchange', setVh)
 setVh()
 
 const bootstrap = async () => {
+  // Electron without an OS keychain encrypts its stores with a password-derived
+  // key; gate the boot behind the unlock screen first. Returns true when a
+  // post-unlock reload is pending, in which case booting stops here.
+  if (await ensureElectronStorageUnlocked()) return
+
   // Electron restores its main-process snapshot before modules that read
   // localStorage are evaluated. Web mode returns immediately.
   await restoreElectronLocalStorage()

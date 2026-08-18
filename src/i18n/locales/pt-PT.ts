@@ -1154,6 +1154,19 @@ export default {
     'One-time identity': 'Identidade de utilização única',
     'Try loading more': 'Tentar carregar mais',
     'Show less': 'Mostrar menos',
-    'Remember this difficulty': 'Memorizar esta dificuldade'
+    'Remember this difficulty': 'Memorizar esta dificuldade',
+    'Unlock Jumble': 'Desbloquear Jumble',
+    'No system keychain available': 'Nenhum porta-chaves do sistema disponível',
+    'Password storage explanation':
+      'Este dispositivo não tem um porta-chaves do sistema, por isso o Jumble encripta os seus dados locais (sessões de início de sessão, chaves privadas) com uma palavra-passe. Ser-lhe-á pedida sempre que a aplicação iniciar.',
+    'Create password': 'Criar palavra-passe',
+    'Confirm password': 'Confirmar palavra-passe',
+    Unlock: 'Desbloquear',
+    'Incorrect password': 'Palavra-passe incorreta',
+    'Password must be at least 4 characters': 'A palavra-passe deve ter pelo menos 4 caracteres',
+    'Forgot password?': 'Esqueceu-se da palavra-passe?',
+    'Reset encrypted data': 'Repor dados encriptados',
+    'Reset encrypted data warning':
+      'Se se esqueceu da palavra-passe, pode repor os dados encriptados. Isto elimina permanentemente todas as sessões de início de sessão e chaves privadas guardadas neste dispositivo. Esta ação não pode ser anulada.'
   }
 }

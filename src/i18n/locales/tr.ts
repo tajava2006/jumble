@@ -1148,6 +1148,19 @@ export default {
     'One-time identity': 'Tek kullanımlık kimlik',
     'Try loading more': 'Daha fazlasını yüklemeyi dene',
     'Show less': 'Daha az göster',
-    'Remember this difficulty': 'Bu zorluk seviyesini hatırla'
+    'Remember this difficulty': 'Bu zorluk seviyesini hatırla',
+    'Unlock Jumble': "Jumble'ın kilidini aç",
+    'No system keychain available': 'Kullanılabilir sistem anahtarlığı yok',
+    'Password storage explanation':
+      'Bu cihazda sistem anahtarlığı yok, bu nedenle Jumble yerel verilerinizi (oturumlar, özel anahtarlar) bir parola ile şifreler. Uygulama her başlatıldığında parola istenir.',
+    'Create password': 'Parola oluştur',
+    'Confirm password': 'Parolayı onayla',
+    Unlock: 'Kilidi aç',
+    'Incorrect password': 'Yanlış parola',
+    'Password must be at least 4 characters': 'Parola en az 4 karakter olmalıdır',
+    'Forgot password?': 'Parolanızı mı unuttunuz?',
+    'Reset encrypted data': 'Şifrelenmiş verileri sıfırla',
+    'Reset encrypted data warning':
+      'Parolayı unuttuysanız şifrelenmiş verileri sıfırlayabilirsiniz. Bu, cihazda saklanan tüm oturumları ve özel anahtarları kalıcı olarak siler. Bu işlem geri alınamaz.'
   }
 }

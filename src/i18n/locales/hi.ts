@@ -1144,6 +1144,19 @@ export default {
     'One-time identity': 'एक बार की पहचान',
     'Try loading more': 'और लोड करने की कोशिश करें',
     'Show less': 'कम दिखाएं',
-    'Remember this difficulty': 'इस कठिनाई को याद रखें'
+    'Remember this difficulty': 'इस कठिनाई को याद रखें',
+    'Unlock Jumble': 'Jumble अनलॉक करें',
+    'No system keychain available': 'कोई सिस्टम कीचेन उपलब्ध नहीं है',
+    'Password storage explanation':
+      'इस डिवाइस में सिस्टम कीचेन नहीं है, इसलिए Jumble आपके स्थानीय डेटा (लॉगिन सत्र, निजी कुंजियाँ) को पासवर्ड से एन्क्रिप्ट करता है। ऐप शुरू होने पर हर बार यह मांगा जाएगा।',
+    'Create password': 'पासवर्ड बनाएं',
+    'Confirm password': 'पासवर्ड की पुष्टि करें',
+    Unlock: 'अनलॉक करें',
+    'Incorrect password': 'गलत पासवर्ड',
+    'Password must be at least 4 characters': 'पासवर्ड कम से कम 4 अक्षरों का होना चाहिए',
+    'Forgot password?': 'पासवर्ड भूल गए?',
+    'Reset encrypted data': 'एन्क्रिप्ट किया गया डेटा रीसेट करें',
+    'Reset encrypted data warning':
+      'यदि आप पासवर्ड भूल गए हैं, तो आप एन्क्रिप्ट किए गए डेटा को रीसेट कर सकते हैं। इससे इस डिवाइस पर सहेजे गए सभी लॉगिन सत्र और निजी कुंजियाँ स्थायी रूप से हटा दी जाएंगी। इसे पूर्ववत नहीं किया जा सकता।'
   }
 }

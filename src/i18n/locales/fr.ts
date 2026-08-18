@@ -1162,6 +1162,19 @@ export default {
     'One-time identity': 'Identité à usage unique',
     'Try loading more': 'Essayer d’en charger plus',
     'Show less': 'Afficher moins',
-    'Remember this difficulty': 'Mémoriser cette difficulté'
+    'Remember this difficulty': 'Mémoriser cette difficulté',
+    'Unlock Jumble': 'Déverrouiller Jumble',
+    'No system keychain available': 'Aucun trousseau système disponible',
+    'Password storage explanation':
+      "Cet appareil n'a pas de trousseau système, Jumble chiffre donc vos données locales (sessions de connexion, clés privées) avec un mot de passe. Il vous sera demandé à chaque démarrage de l'application.",
+    'Create password': 'Créer un mot de passe',
+    'Confirm password': 'Confirmer le mot de passe',
+    Unlock: 'Déverrouiller',
+    'Incorrect password': 'Mot de passe incorrect',
+    'Password must be at least 4 characters': 'Le mot de passe doit contenir au moins 4 caractères',
+    'Forgot password?': 'Mot de passe oublié ?',
+    'Reset encrypted data': 'Réinitialiser les données chiffrées',
+    'Reset encrypted data warning':
+      'Si vous avez oublié le mot de passe, vous pouvez réinitialiser les données chiffrées. Cela supprime définitivement toutes les sessions de connexion et clés privées enregistrées sur cet appareil. Cette action est irréversible.'
   }
 }

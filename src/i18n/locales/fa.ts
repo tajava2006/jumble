@@ -1145,6 +1145,19 @@ export default {
     'One-time identity': 'هویت یک‌بارمصرف',
     'Try loading more': 'تلاش برای بارگذاری بیشتر',
     'Show less': 'نمایش کمتر',
-    'Remember this difficulty': 'این سطح دشواری را به خاطر بسپار'
+    'Remember this difficulty': 'این سطح دشواری را به خاطر بسپار',
+    'Unlock Jumble': 'باز کردن قفل Jumble',
+    'No system keychain available': 'حلقه‌کلید سیستم در دسترس نیست',
+    'Password storage explanation':
+      'این دستگاه حلقه‌کلید سیستم ندارد، بنابراین Jumble داده‌های محلی شما (نشست‌های ورود، کلیدهای خصوصی) را با گذرواژه رمزنگاری می‌کند. هر بار که برنامه شروع می‌شود از شما خواسته می‌شود.',
+    'Create password': 'ایجاد گذرواژه',
+    'Confirm password': 'تأیید گذرواژه',
+    Unlock: 'باز کردن قفل',
+    'Incorrect password': 'گذرواژه نادرست است',
+    'Password must be at least 4 characters': 'گذرواژه باید حداقل ۴ کاراکتر باشد',
+    'Forgot password?': 'گذرواژه را فراموش کرده‌اید؟',
+    'Reset encrypted data': 'بازنشانی داده‌های رمزنگاری‌شده',
+    'Reset encrypted data warning':
+      'اگر گذرواژه را فراموش کرده‌اید، می‌توانید داده‌های رمزنگاری‌شده را بازنشانی کنید. این کار همه نشست‌های ورود و کلیدهای خصوصی ذخیره‌شده روی این دستگاه را برای همیشه حذف می‌کند و قابل بازگشت نیست.'
   }
 }

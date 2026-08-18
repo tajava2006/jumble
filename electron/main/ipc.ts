@@ -6,9 +6,11 @@ import {
   TLocalStorageSnapshot,
   TPomegranateAuthPurpose,
   TProxyFetchOptions,
-  TSecretsBundle
+  TSecretsBundle,
+  TSecurityStatus
 } from '../shared/ipc-types.js'
 import type { MediaServer } from './media-server.js'
+import type { PasswordCrypto } from './password-crypto.js'
 import type { PomegranateAuthServer } from './pomegranate-auth-server.js'
 import { proxyFetch } from './proxy-fetch.js'
 import type { RelayManager } from './relay-manager.js'
@@ -16,13 +18,22 @@ import type { RendererStorageStore } from './renderer-storage-store.js'
 import type { SecretsStore } from './secrets-store.js'
 import type { Updater } from './updater.js'
 
+export type TSecurityContext = {
+  /** Which backend encrypts the on-disk stores for this installation. */
+  backend: 'safeStorage' | 'password'
+  passwordCrypto: PasswordCrypto
+  secrets: SecretsStore
+  rendererStorage: RendererStorageStore
+}
+
 export function registerIpcHandlers(
   manager: RelayManager,
   secrets: SecretsStore,
   updater: Updater,
   mediaServer: MediaServer,
   pomegranateAuthServer: PomegranateAuthServer,
-  rendererStorage: RendererStorageStore
+  rendererStorage: RendererStorageStore,
+  security: TSecurityContext
 ) {
   ipcMain.handle(IPC_CHANNELS.ensure, (_e, url: string) => manager.ensure(url))
 
@@ -59,6 +70,29 @@ export function registerIpcHandlers(
   ipcMain.handle(IPC_CHANNELS.localStorageSave, (_e, snapshot: TLocalStorageSnapshot) =>
     rendererStorage.save(snapshot)
   )
+
+  const { passwordCrypto } = security
+  ipcMain.handle(IPC_CHANNELS.securityGetStatus, async (): Promise<TSecurityStatus> => {
+    const isPassword = security.backend === 'password'
+    return {
+      backend: security.backend,
+      unlocked: !isPassword || passwordCrypto.isReady(),
+      needsSetup: isPassword && !(await passwordCrypto.hasParams())
+    }
+  })
+  ipcMain.handle(IPC_CHANNELS.securitySetupPassword, (_e, password: string) => {
+    if (typeof password !== 'string' || password.length === 0) {
+      return Promise.reject(new Error('password must be a non-empty string'))
+    }
+    return passwordCrypto.setup(password)
+  })
+  ipcMain.handle(IPC_CHANNELS.securityUnlock, (_e, password: string) =>
+    passwordCrypto.unlock(typeof password === 'string' ? password : '')
+  )
+  ipcMain.handle(IPC_CHANNELS.securityReset, async () => {
+    await passwordCrypto.reset()
+    await Promise.all([security.secrets.deleteAll(), security.rendererStorage.deleteAll()])
+  })
 
   ipcMain.handle(IPC_CHANNELS.updateCheck, () => updater.check())
   ipcMain.handle(IPC_CHANNELS.updateDownload, () => updater.download())

@@ -61,6 +61,13 @@ const bridge: TElectronBridge = {
     save: (snapshot: TLocalStorageSnapshot) =>
       ipcRenderer.invoke(IPC_CHANNELS.localStorageSave, snapshot)
   },
+  security: {
+    getStatus: () => ipcRenderer.invoke(IPC_CHANNELS.securityGetStatus),
+    setupPassword: (password: string) =>
+      ipcRenderer.invoke(IPC_CHANNELS.securitySetupPassword, password),
+    unlock: (password: string) => ipcRenderer.invoke(IPC_CHANNELS.securityUnlock, password),
+    reset: () => ipcRenderer.invoke(IPC_CHANNELS.securityReset)
+  },
   update: {
     check: () => ipcRenderer.invoke(IPC_CHANNELS.updateCheck),
     download: () => ipcRenderer.invoke(IPC_CHANNELS.updateDownload),

@@ -1,7 +1,8 @@
-import { app, safeStorage } from 'electron'
+import { app } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import type { TLocalStorageSnapshot } from '../shared/ipc-types.js'
+import type { StoreCrypto } from './store-crypto.js'
 
 const FILE_NAME = 'renderer-state.enc'
 const BACKUP_FILE_NAME = 'renderer-state.enc.bak'
@@ -31,7 +32,7 @@ export class RendererStorageStore {
   private writeChain: Promise<void> = Promise.resolve()
   private loadPromise: Promise<TLocalStorageSnapshot | null> | null = null
 
-  constructor() {
+  constructor(private readonly crypto: StoreCrypto) {
     const userDataPath = app.getPath('userData')
     this.filePath = path.join(userDataPath, FILE_NAME)
     this.backupPath = path.join(userDataPath, BACKUP_FILE_NAME)
@@ -52,7 +53,7 @@ export class RendererStorageStore {
   }
 
   private async loadFromDisk(): Promise<TLocalStorageSnapshot | null> {
-    if (!safeStorage.isEncryptionAvailable()) return null
+    if (!this.crypto.isReady()) return null
 
     let primaryError: unknown
     try {
@@ -84,21 +85,30 @@ export class RendererStorageStore {
 
   private async readSnapshot(filePath: string): Promise<TLocalStorageSnapshot> {
     const encrypted = await fs.readFile(filePath)
-    const plaintext = safeStorage.decryptString(encrypted)
+    const plaintext = this.crypto.decrypt(encrypted)
     const parsed: unknown = JSON.parse(plaintext)
     if (!isSnapshot(parsed)) throw new Error('Invalid renderer storage snapshot')
     return parsed
   }
 
+  /** Delete all snapshot files (used when resetting a forgotten password). */
+  async deleteAll(): Promise<void> {
+    this.loadPromise = null
+    await fs.rm(this.filePath, { force: true })
+    await fs.rm(`${this.filePath}.tmp`, { force: true })
+    await fs.rm(this.backupPath, { force: true })
+    await fs.rm(`${this.backupPath}.tmp`, { force: true })
+  }
+
   private async writeNow(snapshot: TLocalStorageSnapshot): Promise<void> {
-    if (!safeStorage.isEncryptionAvailable()) {
-      throw new Error('safeStorage not available — refusing to persist renderer state')
+    if (!this.crypto.isReady()) {
+      throw new Error('store crypto not ready — refusing to persist renderer state')
     }
 
     await fs.mkdir(path.dirname(this.filePath), { recursive: true })
     await this.backUpCurrentFile()
 
-    const encrypted = safeStorage.encryptString(JSON.stringify(snapshot))
+    const encrypted = this.crypto.encrypt(JSON.stringify(snapshot))
     const temporaryPath = `${this.filePath}.tmp`
     const handle = await fs.open(temporaryPath, 'w', 0o600)
     try {

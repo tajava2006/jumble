@@ -1103,6 +1103,19 @@ export default {
     'One-time identity': '一次性身分',
     'Try loading more': '嘗試載入更多',
     'Show less': '收合',
-    'Remember this difficulty': '記住此難度'
+    'Remember this difficulty': '記住此難度',
+    'Unlock Jumble': '解鎖 Jumble',
+    'No system keychain available': '沒有可用的系統金鑰環',
+    'Password storage explanation':
+      '此裝置沒有系統金鑰環，Jumble 將改用密碼加密你的本機資料（登入工作階段、私鑰）。每次啟動應用程式時都需要輸入該密碼。',
+    'Create password': '建立密碼',
+    'Confirm password': '確認密碼',
+    Unlock: '解鎖',
+    'Incorrect password': '密碼錯誤',
+    'Password must be at least 4 characters': '密碼長度至少為 4 個字元',
+    'Forgot password?': '忘記密碼？',
+    'Reset encrypted data': '重設加密資料',
+    'Reset encrypted data warning':
+      '如果你忘記密碼，可以重設加密資料。這將永久刪除此裝置上儲存的所有登入工作階段和私鑰，且無法復原。'
   }
 }

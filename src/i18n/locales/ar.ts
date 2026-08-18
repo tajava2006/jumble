@@ -1130,6 +1130,19 @@ export default {
     'One-time identity': 'هوية لمرة واحدة',
     'Try loading more': 'محاولة تحميل المزيد',
     'Show less': 'عرض أقل',
-    'Remember this difficulty': 'تذكّر مستوى الصعوبة هذا'
+    'Remember this difficulty': 'تذكّر مستوى الصعوبة هذا',
+    'Unlock Jumble': 'فتح قفل Jumble',
+    'No system keychain available': 'لا توجد سلسلة مفاتيح نظام متاحة',
+    'Password storage explanation':
+      'هذا الجهاز لا يحتوي على سلسلة مفاتيح نظام، لذا يقوم Jumble بتشفير بياناتك المحلية (جلسات تسجيل الدخول، المفاتيح الخاصة) بكلمة مرور بدلاً من ذلك. سيُطلب منك إدخالها في كل مرة يبدأ فيها التطبيق.',
+    'Create password': 'إنشاء كلمة مرور',
+    'Confirm password': 'تأكيد كلمة المرور',
+    Unlock: 'فتح القفل',
+    'Incorrect password': 'كلمة المرور غير صحيحة',
+    'Password must be at least 4 characters': 'يجب أن تتكون كلمة المرور من 4 أحرف على الأقل',
+    'Forgot password?': 'هل نسيت كلمة المرور؟',
+    'Reset encrypted data': 'إعادة تعيين البيانات المشفرة',
+    'Reset encrypted data warning':
+      'إذا نسيت كلمة المرور، يمكنك إعادة تعيين البيانات المشفرة. سيؤدي هذا إلى حذف جميع جلسات تسجيل الدخول والمفاتيح الخاصة المخزنة على هذا الجهاز نهائيًا. لا يمكن التراجع عن هذا الإجراء.'
   }
 }

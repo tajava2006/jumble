@@ -1151,6 +1151,19 @@ export default {
     'One-time identity': 'Identidad de un solo uso',
     'Try loading more': 'Intentar cargar más',
     'Show less': 'Mostrar menos',
-    'Remember this difficulty': 'Recordar esta dificultad'
+    'Remember this difficulty': 'Recordar esta dificultad',
+    'Unlock Jumble': 'Desbloquear Jumble',
+    'No system keychain available': 'No hay llavero del sistema disponible',
+    'Password storage explanation':
+      'Este dispositivo no tiene un llavero del sistema, por lo que Jumble cifra tus datos locales (sesiones de inicio, claves privadas) con una contraseña. Se te pedirá cada vez que se inicie la aplicación.',
+    'Create password': 'Crear contraseña',
+    'Confirm password': 'Confirmar contraseña',
+    Unlock: 'Desbloquear',
+    'Incorrect password': 'Contraseña incorrecta',
+    'Password must be at least 4 characters': 'La contraseña debe tener al menos 4 caracteres',
+    'Forgot password?': '¿Olvidaste tu contraseña?',
+    'Reset encrypted data': 'Restablecer datos cifrados',
+    'Reset encrypted data warning':
+      'Si olvidaste la contraseña, puedes restablecer los datos cifrados. Esto elimina permanentemente todas las sesiones de inicio y claves privadas guardadas en este dispositivo. Esta acción no se puede deshacer.'
   }
 }

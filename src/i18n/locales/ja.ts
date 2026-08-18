@@ -1145,6 +1145,19 @@ export default {
     'One-time identity': '使い捨て ID',
     'Try loading more': 'さらに読み込む',
     'Show less': '折りたたむ',
-    'Remember this difficulty': 'この難易度を記憶する'
+    'Remember this difficulty': 'この難易度を記憶する',
+    'Unlock Jumble': 'Jumble のロックを解除',
+    'No system keychain available': '利用可能なシステムキーリングがありません',
+    'Password storage explanation':
+      'このデバイスにはシステムキーリングがないため、Jumble は代わりにパスワードでローカルデータ（ログインセッション、秘密鍵）を暗号化します。アプリを起動するたびにパスワードの入力が求められます。',
+    'Create password': 'パスワードを作成',
+    'Confirm password': 'パスワード（確認）',
+    Unlock: 'ロック解除',
+    'Incorrect password': 'パスワードが正しくありません',
+    'Password must be at least 4 characters': 'パスワードは4文字以上である必要があります',
+    'Forgot password?': 'パスワードを忘れた場合',
+    'Reset encrypted data': '暗号化データをリセット',
+    'Reset encrypted data warning':
+      'パスワードを忘れた場合は、暗号化データをリセットできます。このデバイスに保存されているすべてのログインセッションと秘密鍵が完全に削除され、元に戻すことはできません。'
   }
 }

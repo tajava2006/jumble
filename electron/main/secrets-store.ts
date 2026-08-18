@@ -1,7 +1,8 @@
-import { app, safeStorage } from 'electron'
+import { app } from 'electron'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { TSecretsBundle } from '../shared/ipc-types.js'
+import type { StoreCrypto } from './store-crypto.js'
 
 const FILE_NAME = 'secrets.enc'
 
@@ -10,12 +11,12 @@ export class SecretsStore {
   private writeChain: Promise<void> = Promise.resolve()
   private loadPromise: Promise<TSecretsBundle> | null = null
 
-  constructor() {
+  constructor(private readonly crypto: StoreCrypto) {
     this.filePath = path.join(app.getPath('userData'), FILE_NAME)
   }
 
   isAvailable(): boolean {
-    return safeStorage.isEncryptionAvailable()
+    return this.crypto.isReady()
   }
 
   preload(): Promise<TSecretsBundle> {
@@ -33,8 +34,8 @@ export class SecretsStore {
   }
 
   private async loadFromDisk(): Promise<TSecretsBundle> {
-    if (!safeStorage.isEncryptionAvailable()) {
-      throw new Error('safeStorage not available — cannot decrypt secrets')
+    if (!this.crypto.isReady()) {
+      throw new Error('store crypto not ready — cannot decrypt secrets')
     }
     let buf: Buffer
     try {
@@ -44,7 +45,7 @@ export class SecretsStore {
       throw err
     }
     if (buf.length === 0) return {}
-    const text = safeStorage.decryptString(buf)
+    const text = this.crypto.decrypt(buf)
     if (!text) return {}
     try {
       const parsed = JSON.parse(text)
@@ -63,12 +64,19 @@ export class SecretsStore {
     return next
   }
 
+  /** Delete the encrypted file (used when resetting a forgotten password). */
+  async deleteAll(): Promise<void> {
+    this.loadPromise = null
+    await fs.rm(this.filePath, { force: true })
+    await fs.rm(`${this.filePath}.tmp`, { force: true })
+  }
+
   private async writeNow(bundle: TSecretsBundle): Promise<void> {
-    if (!safeStorage.isEncryptionAvailable()) {
-      throw new Error('safeStorage not available — refusing to write secrets in plaintext')
+    if (!this.crypto.isReady()) {
+      throw new Error('store crypto not ready — refusing to write secrets in plaintext')
     }
     const json = JSON.stringify(bundle ?? {})
-    const cipher = safeStorage.encryptString(json)
+    const cipher = this.crypto.encrypt(json)
     const tmp = `${this.filePath}.tmp`
     await fs.writeFile(tmp, cipher, { mode: 0o600 })
     await fs.rename(tmp, this.filePath)

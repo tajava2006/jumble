@@ -1155,6 +1155,19 @@ export default {
     'One-time identity': 'Jednorazowa tożsamość',
     'Try loading more': 'Spróbuj wczytać więcej',
     'Show less': 'Pokaż mniej',
-    'Remember this difficulty': 'Zapamiętaj ten poziom trudności'
+    'Remember this difficulty': 'Zapamiętaj ten poziom trudności',
+    'Unlock Jumble': 'Odblokuj Jumble',
+    'No system keychain available': 'Systemowy pęk kluczy jest niedostępny',
+    'Password storage explanation':
+      'To urządzenie nie ma systemowego pęku kluczy, więc Jumble szyfruje twoje dane lokalne (sesje logowania, klucze prywatne) hasłem. Będzie ono wymagane przy każdym uruchomieniu aplikacji.',
+    'Create password': 'Utwórz hasło',
+    'Confirm password': 'Potwierdź hasło',
+    Unlock: 'Odblokuj',
+    'Incorrect password': 'Nieprawidłowe hasło',
+    'Password must be at least 4 characters': 'Hasło musi mieć co najmniej 4 znaki',
+    'Forgot password?': 'Nie pamiętasz hasła?',
+    'Reset encrypted data': 'Zresetuj zaszyfrowane dane',
+    'Reset encrypted data warning':
+      'Jeśli nie pamiętasz hasła, możesz zresetować zaszyfrowane dane. Spowoduje to trwałe usunięcie wszystkich zapisanych sesji logowania i kluczy prywatnych na tym urządzeniu. Tej operacji nie można cofnąć.'
   }
 }

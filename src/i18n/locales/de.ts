@@ -1163,6 +1163,19 @@ export default {
     'One-time identity': 'Einmalige Identität',
     'Try loading more': 'Versuchen, mehr zu laden',
     'Show less': 'Weniger anzeigen',
-    'Remember this difficulty': 'Diese Schwierigkeit merken'
+    'Remember this difficulty': 'Diese Schwierigkeit merken',
+    'Unlock Jumble': 'Jumble entsperren',
+    'No system keychain available': 'Kein System-Schlüsselbund verfügbar',
+    'Password storage explanation':
+      'Dieses Gerät hat keinen System-Schlüsselbund, daher verschlüsselt Jumble deine lokalen Daten (Anmeldesitzungen, private Schlüssel) stattdessen mit einem Passwort. Du wirst bei jedem Start der App danach gefragt.',
+    'Create password': 'Passwort erstellen',
+    'Confirm password': 'Passwort bestätigen',
+    Unlock: 'Entsperren',
+    'Incorrect password': 'Falsches Passwort',
+    'Password must be at least 4 characters': 'Das Passwort muss mindestens 4 Zeichen lang sein',
+    'Forgot password?': 'Passwort vergessen?',
+    'Reset encrypted data': 'Verschlüsselte Daten zurücksetzen',
+    'Reset encrypted data warning':
+      'Wenn du das Passwort vergessen hast, kannst du die verschlüsselten Daten zurücksetzen. Dadurch werden alle gespeicherten Anmeldesitzungen und privaten Schlüssel auf diesem Gerät dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.'
   }
 }

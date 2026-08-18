@@ -1148,6 +1148,19 @@ export default {
     'One-time identity': 'Egyszer használatos identitás',
     'Try loading more': 'Próbálj többet betölteni',
     'Show less': 'Kevesebb',
-    'Remember this difficulty': 'Jegyezze meg ezt a nehézséget'
+    'Remember this difficulty': 'Jegyezze meg ezt a nehézséget',
+    'Unlock Jumble': 'Jumble feloldása',
+    'No system keychain available': 'Nem érhető el rendszerkulcstartó',
+    'Password storage explanation':
+      'Ez az eszköz nem rendelkezik rendszerkulcstartóval, ezért a Jumble jelszóval titkosítja a helyi adatait (bejelentkezési munkamenetek, privát kulcsok). Az alkalmazás minden indításakor meg kell adnia.',
+    'Create password': 'Jelszó létrehozása',
+    'Confirm password': 'Jelszó megerősítése',
+    Unlock: 'Feloldás',
+    'Incorrect password': 'Hibás jelszó',
+    'Password must be at least 4 characters': 'A jelszónak legalább 4 karakterből kell állnia',
+    'Forgot password?': 'Elfelejtette a jelszavát?',
+    'Reset encrypted data': 'Titkosított adatok visszaállítása',
+    'Reset encrypted data warning':
+      'Ha elfelejtette a jelszót, visszaállíthatja a titkosított adatokat. Ez véglegesen törli az eszközön tárolt összes bejelentkezési munkamenetet és privát kulcsot. A művelet nem vonható vissza.'
   }
 }

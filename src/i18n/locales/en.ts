@@ -1136,6 +1136,19 @@ export default {
     'One-time identity': 'One-time identity',
     'Try loading more': 'Try loading more',
     'Show less': 'Show less',
-    'Remember this difficulty': 'Remember this difficulty'
+    'Remember this difficulty': 'Remember this difficulty',
+    'Unlock Jumble': 'Unlock Jumble',
+    'No system keychain available': 'No system keychain available',
+    'Password storage explanation':
+      'This device has no system keychain, so Jumble encrypts your local data (login sessions, private keys) with a password instead. You will be asked for it each time the app starts.',
+    'Create password': 'Create password',
+    'Confirm password': 'Confirm password',
+    Unlock: 'Unlock',
+    'Incorrect password': 'Incorrect password',
+    'Password must be at least 4 characters': 'Password must be at least 4 characters',
+    'Forgot password?': 'Forgot password?',
+    'Reset encrypted data': 'Reset encrypted data',
+    'Reset encrypted data warning':
+      'If you forgot the password, you can reset the encrypted data. This permanently deletes all stored login sessions and private keys on this device. This cannot be undone.'
   }
 }

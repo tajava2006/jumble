@@ -17,6 +17,10 @@ export const IPC_CHANNELS = {
   secretsLoad: 'secrets:load',
   secretsSave: 'secrets:save',
   secretsAvailable: 'secrets:available',
+  securityGetStatus: 'security:get-status',
+  securitySetupPassword: 'security:setup-password',
+  securityUnlock: 'security:unlock',
+  securityReset: 'security:reset',
   localStorageLoad: 'local-storage:load',
   localStorageSave: 'local-storage:save',
   updateCheck: 'update:check',
@@ -54,6 +58,30 @@ export type TLocalStorageSnapshot = {
 export type TLocalStorageBridge = {
   load: () => Promise<TLocalStorageSnapshot | null>
   save: (snapshot: TLocalStorageSnapshot) => Promise<void>
+}
+
+export type TSecurityBackend = 'safeStorage' | 'password'
+
+export type TSecurityStatus = {
+  /** Which encryption layer backs the on-disk stores. */
+  backend: TSecurityBackend
+  /** Password backend only: the key has been derived and is held in memory. */
+  unlocked: boolean
+  /** Password backend only: no password has been created on this machine yet. */
+  needsSetup: boolean
+}
+
+export type TSecurityBridge = {
+  getStatus: () => Promise<TSecurityStatus>
+  /** Create the initial password (needsSetup only) and unlock. */
+  setupPassword: (password: string) => Promise<void>
+  /** Derive and verify the key. Resolves false on a wrong password. */
+  unlock: (password: string) => Promise<boolean>
+  /**
+   * Forget the password and delete every encrypted store. Used as the escape
+   * hatch for a forgotten password — all persisted secrets are lost.
+   */
+  reset: () => Promise<void>
 }
 
 export type TSubEventPayload = {
@@ -186,6 +214,7 @@ export type TElectronBridge = {
   relay: TElectronRelayBridge
   secrets: TSecretsBridge
   localStorage: TLocalStorageBridge
+  security: TSecurityBridge
   update: TUpdateBridge
   proxy: TProxyBridge
   media: TMediaBridge

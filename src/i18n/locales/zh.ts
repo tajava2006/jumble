@@ -1102,6 +1102,19 @@ export default {
     'One-time identity': '一次性身份',
     'Try loading more': '尝试加载更多',
     'Show less': '收起',
-    'Remember this difficulty': '记住此难度'
+    'Remember this difficulty': '记住此难度',
+    'Unlock Jumble': '解锁 Jumble',
+    'No system keychain available': '没有可用的系统密钥环',
+    'Password storage explanation':
+      '此设备没有系统密钥环，Jumble 将改用密码加密你的本地数据（登录会话、私钥）。每次启动应用时都需要输入该密码。',
+    'Create password': '创建密码',
+    'Confirm password': '确认密码',
+    Unlock: '解锁',
+    'Incorrect password': '密码错误',
+    'Password must be at least 4 characters': '密码长度至少为 4 个字符',
+    'Forgot password?': '忘记密码？',
+    'Reset encrypted data': '重置加密数据',
+    'Reset encrypted data warning':
+      '如果忘记了密码，你可以重置加密数据。这将永久删除此设备上保存的所有登录会话和私钥，且无法撤销。'
   }
 }

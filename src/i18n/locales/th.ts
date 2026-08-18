@@ -1127,6 +1127,19 @@ export default {
     'One-time identity': 'ตัวตนแบบครั้งเดียว',
     'Try loading more': 'ลองโหลดเพิ่มเติม',
     'Show less': 'แสดงน้อยลง',
-    'Remember this difficulty': 'จดจำระดับความยากนี้'
+    'Remember this difficulty': 'จดจำระดับความยากนี้',
+    'Unlock Jumble': 'ปลดล็อก Jumble',
+    'No system keychain available': 'ไม่มีที่เก็บกุญแจของระบบที่ใช้งานได้',
+    'Password storage explanation':
+      'อุปกรณ์นี้ไม่มีที่เก็บกุญแจของระบบ Jumble จึงเข้ารหัสข้อมูลในเครื่องของคุณ (เซสชันการเข้าสู่ระบบ คีย์ส่วนตัว) ด้วยรหัสผ่านแทน ระบบจะถามรหัสผ่านทุกครั้งที่เปิดแอป',
+    'Create password': 'สร้างรหัสผ่าน',
+    'Confirm password': 'ยืนยันรหัสผ่าน',
+    Unlock: 'ปลดล็อก',
+    'Incorrect password': 'รหัสผ่านไม่ถูกต้อง',
+    'Password must be at least 4 characters': 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร',
+    'Forgot password?': 'ลืมรหัสผ่าน?',
+    'Reset encrypted data': 'รีเซ็ตข้อมูลที่เข้ารหัส',
+    'Reset encrypted data warning':
+      'หากคุณลืมรหัสผ่าน คุณสามารถรีเซ็ตข้อมูลที่เข้ารหัสได้ การดำเนินการนี้จะลบเซสชันการเข้าสู่ระบบและคีย์ส่วนตัวทั้งหมดที่จัดเก็บไว้ในอุปกรณ์นี้อย่างถาวร และไม่สามารถยกเลิกได้'
   }
 }

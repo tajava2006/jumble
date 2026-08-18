@@ -1150,6 +1150,19 @@ export default {
     'One-time identity': 'Identidade descartável',
     'Try loading more': 'Tentar carregar mais',
     'Show less': 'Mostrar menos',
-    'Remember this difficulty': 'Lembrar desta dificuldade'
+    'Remember this difficulty': 'Lembrar desta dificuldade',
+    'Unlock Jumble': 'Desbloquear Jumble',
+    'No system keychain available': 'Nenhum chaveiro do sistema disponível',
+    'Password storage explanation':
+      'Este dispositivo não tem um chaveiro do sistema, então o Jumble criptografa seus dados locais (sessões de login, chaves privadas) com uma senha. Ela será solicitada toda vez que o aplicativo for iniciado.',
+    'Create password': 'Criar senha',
+    'Confirm password': 'Confirmar senha',
+    Unlock: 'Desbloquear',
+    'Incorrect password': 'Senha incorreta',
+    'Password must be at least 4 characters': 'A senha deve ter pelo menos 4 caracteres',
+    'Forgot password?': 'Esqueceu a senha?',
+    'Reset encrypted data': 'Redefinir dados criptografados',
+    'Reset encrypted data warning':
+      'Se você esqueceu a senha, pode redefinir os dados criptografados. Isso exclui permanentemente todas as sessões de login e chaves privadas salvas neste dispositivo. Esta ação não pode ser desfeita.'
   }
 }
