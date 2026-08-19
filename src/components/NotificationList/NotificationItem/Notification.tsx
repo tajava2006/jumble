@@ -15,7 +15,7 @@ import { useNostr } from '@/providers/NostrProvider'
 import { useNotification } from '@/providers/NotificationProvider'
 import { useUserPreferences } from '@/providers/UserPreferencesProvider'
 import { NostrEvent } from 'nostr-tools'
-import { useMemo } from 'react'
+import { useLayoutEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function Notification({
@@ -28,7 +28,8 @@ export default function Notification({
   targetEvent,
   targetPath,
   isNew = false,
-  showStats = false
+  showStats = false,
+  onVisibilityChange
 }: {
   icon: React.ReactNode
   notificationId: string
@@ -40,6 +41,7 @@ export default function Notification({
   targetPath?: string
   isNew?: boolean
   showStats?: boolean
+  onVisibilityChange?: (isVisible: boolean) => void
 }) {
   const { t } = useTranslation()
   const { push } = useSecondaryPage()
@@ -51,6 +53,18 @@ export default function Notification({
     () => isNew && !isNotificationRead(notificationId),
     [isNew, isNotificationRead, notificationId]
   )
+  const onVisibilityChangeRef = useRef(onVisibilityChange)
+
+  useLayoutEffect(() => {
+    onVisibilityChangeRef.current = onVisibilityChange
+  }, [onVisibilityChange])
+
+  // A notification may be suppressed after its data has resolved. Report its
+  // actual presence so its parent can avoid rendering an empty date group.
+  useLayoutEffect(() => {
+    onVisibilityChangeRef.current?.(true)
+    return () => onVisibilityChangeRef.current?.(false)
+  }, [notificationId])
 
   const handleClick = () => {
     markNotificationAsRead(notificationId)
