@@ -1,6 +1,7 @@
 import ClickableCard from '@/components/ClickableCard'
 import ContentPreview from '@/components/ContentPreview'
 import { FormattedTimestamp } from '@/components/FormattedTimestamp'
+import ProfileOptions from '@/components/ProfileOptions'
 import StuffStats from '@/components/StuffStats'
 import TrustScoreBadge from '@/components/TrustScoreBadge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -141,16 +142,22 @@ export default function Notification({
             <TrustScoreBadge pubkey={sender} />
             <div className="shrink-0 text-sm text-muted-foreground">{description}</div>
           </div>
-          {unread && (
-            <button
-              className="m-0.5 size-3 shrink-0 rounded-full bg-primary transition-all hover:ring-4 hover:ring-primary/20"
-              title={t('Mark as read')}
-              onClick={(e) => {
-                e.stopPropagation()
-                markNotificationAsRead(notificationId)
-              }}
+          <div className="flex shrink-0 items-center">
+            {unread && (
+              <button
+                className="m-0.5 size-3 shrink-0 rounded-full bg-primary transition-all hover:ring-4 hover:ring-primary/20"
+                title={t('Mark as read')}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  markNotificationAsRead(notificationId)
+                }}
+              />
+            )}
+            <ProfileOptions
+              pubkey={sender}
+              triggerStyle="note-options"
             />
-          )}
+          </div>
         </div>
         {middle}
         {targetEvent && (
