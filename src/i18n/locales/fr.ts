@@ -1175,6 +1175,7 @@ export default {
     'Forgot password?': 'Mot de passe oublié ?',
     'Reset encrypted data': 'Réinitialiser les données chiffrées',
     'Reset encrypted data warning':
-      'Si vous avez oublié le mot de passe, vous pouvez réinitialiser les données chiffrées. Cela supprime définitivement toutes les sessions de connexion et clés privées enregistrées sur cet appareil. Cette action est irréversible.'
+      'Si vous avez oublié le mot de passe, vous pouvez réinitialiser les données chiffrées. Cela supprime définitivement toutes les sessions de connexion et clés privées enregistrées sur cet appareil. Cette action est irréversible.',
+    'Copy link': 'Copier le lien'
   }
 }

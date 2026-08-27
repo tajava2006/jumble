@@ -1116,6 +1116,7 @@ export default {
     'Forgot password?': '忘記密碼？',
     'Reset encrypted data': '重設加密資料',
     'Reset encrypted data warning':
-      '如果你忘記密碼，可以重設加密資料。這將永久刪除此裝置上儲存的所有登入工作階段和私鑰，且無法復原。'
+      '如果你忘記密碼，可以重設加密資料。這將永久刪除此裝置上儲存的所有登入工作階段和私鑰，且無法復原。',
+    'Copy link': '複製連結'
   }
 }

@@ -1161,6 +1161,7 @@ export default {
     'Forgot password?': 'Elfelejtette a jelszavát?',
     'Reset encrypted data': 'Titkosított adatok visszaállítása',
     'Reset encrypted data warning':
-      'Ha elfelejtette a jelszót, visszaállíthatja a titkosított adatokat. Ez véglegesen törli az eszközön tárolt összes bejelentkezési munkamenetet és privát kulcsot. A művelet nem vonható vissza.'
+      'Ha elfelejtette a jelszót, visszaállíthatja a titkosított adatokat. Ez véglegesen törli az eszközön tárolt összes bejelentkezési munkamenetet és privát kulcsot. A művelet nem vonható vissza.',
+    'Copy link': 'Hivatkozás másolása'
   }
 }

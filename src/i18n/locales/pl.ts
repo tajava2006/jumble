@@ -1168,6 +1168,7 @@ export default {
     'Forgot password?': 'Nie pamiętasz hasła?',
     'Reset encrypted data': 'Zresetuj zaszyfrowane dane',
     'Reset encrypted data warning':
-      'Jeśli nie pamiętasz hasła, możesz zresetować zaszyfrowane dane. Spowoduje to trwałe usunięcie wszystkich zapisanych sesji logowania i kluczy prywatnych na tym urządzeniu. Tej operacji nie można cofnąć.'
+      'Jeśli nie pamiętasz hasła, możesz zresetować zaszyfrowane dane. Spowoduje to trwałe usunięcie wszystkich zapisanych sesji logowania i kluczy prywatnych na tym urządzeniu. Tej operacji nie można cofnąć.',
+    'Copy link': 'Kopiuj link'
   }
 }

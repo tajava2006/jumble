@@ -1165,6 +1165,7 @@ export default {
     'Forgot password?': 'Password dimenticata?',
     'Reset encrypted data': 'Reimposta dati crittografati',
     'Reset encrypted data warning':
-      "Se hai dimenticato la password, puoi reimpostare i dati crittografati. Questo elimina permanentemente tutte le sessioni di accesso e le chiavi private salvate su questo dispositivo. L'operazione non può essere annullata."
+      "Se hai dimenticato la password, puoi reimpostare i dati crittografati. Questo elimina permanentemente tutte le sessioni di accesso e le chiavi private salvate su questo dispositivo. L'operazione non può essere annullata.",
+    'Copy link': 'Copia link'
   }
 }

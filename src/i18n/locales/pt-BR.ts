@@ -1163,6 +1163,7 @@ export default {
     'Forgot password?': 'Esqueceu a senha?',
     'Reset encrypted data': 'Redefinir dados criptografados',
     'Reset encrypted data warning':
-      'Se você esqueceu a senha, pode redefinir os dados criptografados. Isso exclui permanentemente todas as sessões de login e chaves privadas salvas neste dispositivo. Esta ação não pode ser desfeita.'
+      'Se você esqueceu a senha, pode redefinir os dados criptografados. Isso exclui permanentemente todas as sessões de login e chaves privadas salvas neste dispositivo. Esta ação não pode ser desfeita.',
+    'Copy link': 'Copiar link'
   }
 }

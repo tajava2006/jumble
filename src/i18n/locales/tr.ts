@@ -1161,6 +1161,7 @@ export default {
     'Forgot password?': 'Parolanızı mı unuttunuz?',
     'Reset encrypted data': 'Şifrelenmiş verileri sıfırla',
     'Reset encrypted data warning':
-      'Parolayı unuttuysanız şifrelenmiş verileri sıfırlayabilirsiniz. Bu, cihazda saklanan tüm oturumları ve özel anahtarları kalıcı olarak siler. Bu işlem geri alınamaz.'
+      'Parolayı unuttuysanız şifrelenmiş verileri sıfırlayabilirsiniz. Bu, cihazda saklanan tüm oturumları ve özel anahtarları kalıcı olarak siler. Bu işlem geri alınamaz.',
+    'Copy link': 'Bağlantıyı kopyala'
   }
 }

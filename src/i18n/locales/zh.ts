@@ -1115,6 +1115,7 @@ export default {
     'Forgot password?': '忘记密码？',
     'Reset encrypted data': '重置加密数据',
     'Reset encrypted data warning':
-      '如果忘记了密码，你可以重置加密数据。这将永久删除此设备上保存的所有登录会话和私钥，且无法撤销。'
+      '如果忘记了密码，你可以重置加密数据。这将永久删除此设备上保存的所有登录会话和私钥，且无法撤销。',
+    'Copy link': '复制链接'
   }
 }

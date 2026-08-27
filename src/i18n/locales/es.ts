@@ -1164,6 +1164,7 @@ export default {
     'Forgot password?': '¿Olvidaste tu contraseña?',
     'Reset encrypted data': 'Restablecer datos cifrados',
     'Reset encrypted data warning':
-      'Si olvidaste la contraseña, puedes restablecer los datos cifrados. Esto elimina permanentemente todas las sesiones de inicio y claves privadas guardadas en este dispositivo. Esta acción no se puede deshacer.'
+      'Si olvidaste la contraseña, puedes restablecer los datos cifrados. Esto elimina permanentemente todas las sesiones de inicio y claves privadas guardadas en este dispositivo. Esta acción no se puede deshacer.',
+    'Copy link': 'Copiar enlace'
   }
 }
