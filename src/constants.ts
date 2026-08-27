@@ -45,6 +45,7 @@ export const StorageKey = {
   HIDE_CONTENT_MENTIONING_MUTED_USERS: 'hideContentMentioningMutedUsers',
   NOTIFICATION_LIST_STYLE: 'notificationListStyle',
   MEDIA_AUTO_LOAD_POLICY: 'mediaAutoLoadPolicy',
+  SHOW_LINK_PREVIEWS: 'showLinkPreviews',
   PROFILE_PICTURE_AUTO_LOAD_POLICY: 'profilePictureAutoLoadPolicy',
   SHOWN_CREATE_WALLET_GUIDE_TOAST_PUBKEYS: 'shownCreateWalletGuideToastPubkeys',
   SIDEBAR_COLLAPSE: 'sidebarCollapse',

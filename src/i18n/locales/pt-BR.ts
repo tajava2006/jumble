@@ -1164,6 +1164,8 @@ export default {
     'Reset encrypted data': 'Redefinir dados criptografados',
     'Reset encrypted data warning':
       'Se você esqueceu a senha, pode redefinir os dados criptografados. Isso exclui permanentemente todas as sessões de login e chaves privadas salvas neste dispositivo. Esta ação não pode ser desfeita.',
-    'Copy link': 'Copiar link'
+    'Copy link': 'Copiar link',
+    'Link previews': 'Pré-visualizações de links',
+    'Show previews for links in notes': 'Mostrar pré-visualizações de links nas notas'
   }
 }

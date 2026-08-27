@@ -1162,6 +1162,8 @@ export default {
     'Reset encrypted data': 'Şifrelenmiş verileri sıfırla',
     'Reset encrypted data warning':
       'Parolayı unuttuysanız şifrelenmiş verileri sıfırlayabilirsiniz. Bu, cihazda saklanan tüm oturumları ve özel anahtarları kalıcı olarak siler. Bu işlem geri alınamaz.',
-    'Copy link': 'Bağlantıyı kopyala'
+    'Copy link': 'Bağlantıyı kopyala',
+    'Link previews': 'Bağlantı önizlemeleri',
+    'Show previews for links in notes': 'Notlardaki bağlantıların önizlemelerini göster'
   }
 }

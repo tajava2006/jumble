@@ -1116,6 +1116,8 @@ export default {
     'Reset encrypted data': '重置加密数据',
     'Reset encrypted data warning':
       '如果忘记了密码，你可以重置加密数据。这将永久删除此设备上保存的所有登录会话和私钥，且无法撤销。',
-    'Copy link': '复制链接'
+    'Copy link': '复制链接',
+    'Link previews': '链接预览',
+    'Show previews for links in notes': '显示笔记中的链接预览'
   }
 }

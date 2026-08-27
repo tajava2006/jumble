@@ -1176,6 +1176,8 @@ export default {
     'Reset encrypted data': 'Réinitialiser les données chiffrées',
     'Reset encrypted data warning':
       'Si vous avez oublié le mot de passe, vous pouvez réinitialiser les données chiffrées. Cela supprime définitivement toutes les sessions de connexion et clés privées enregistrées sur cet appareil. Cette action est irréversible.',
-    'Copy link': 'Copier le lien'
+    'Copy link': 'Copier le lien',
+    'Link previews': 'Aperçus des liens',
+    'Show previews for links in notes': 'Afficher les aperçus des liens dans les notes'
   }
 }

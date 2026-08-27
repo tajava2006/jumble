@@ -1177,6 +1177,8 @@ export default {
     'Reset encrypted data': 'Verschlüsselte Daten zurücksetzen',
     'Reset encrypted data warning':
       'Wenn du das Passwort vergessen hast, kannst du die verschlüsselten Daten zurücksetzen. Dadurch werden alle gespeicherten Anmeldesitzungen und privaten Schlüssel auf diesem Gerät dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden.',
-    'Copy link': 'Link kopieren'
+    'Copy link': 'Link kopieren',
+    'Link previews': 'Linkvorschauen',
+    'Show previews for links in notes': 'Vorschauen für Links in Notizen anzeigen'
   }
 }

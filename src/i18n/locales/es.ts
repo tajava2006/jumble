@@ -1165,6 +1165,8 @@ export default {
     'Reset encrypted data': 'Restablecer datos cifrados',
     'Reset encrypted data warning':
       'Si olvidaste la contraseña, puedes restablecer los datos cifrados. Esto elimina permanentemente todas las sesiones de inicio y claves privadas guardadas en este dispositivo. Esta acción no se puede deshacer.',
-    'Copy link': 'Copiar enlace'
+    'Copy link': 'Copiar enlace',
+    'Link previews': 'Vistas previas de enlaces',
+    'Show previews for links in notes': 'Mostrar vistas previas de enlaces en las notas'
   }
 }

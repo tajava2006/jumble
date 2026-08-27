@@ -1168,6 +1168,8 @@ export default {
     'Reset encrypted data': 'Repor dados encriptados',
     'Reset encrypted data warning':
       'Se se esqueceu da palavra-passe, pode repor os dados encriptados. Isto elimina permanentemente todas as sessões de início de sessão e chaves privadas guardadas neste dispositivo. Esta ação não pode ser anulada.',
-    'Copy link': 'Copiar ligação'
+    'Copy link': 'Copiar ligação',
+    'Link previews': 'Pré-visualizações de ligações',
+    'Show previews for links in notes': 'Mostrar pré-visualizações de ligações nas notas'
   }
 }
