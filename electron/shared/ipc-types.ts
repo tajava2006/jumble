@@ -135,6 +135,7 @@ export type TUpdateStatus =
   | 'available'
   | 'not-available'
   | 'downloading'
+  | 'download-error'
   | 'downloaded'
   | 'error'
 
@@ -144,7 +145,7 @@ export type TUpdateState = {
   currentVersion: string
   /** Version reported by the update server when status is `available`/`downloading`/`downloaded` */
   newVersion?: string
-  /** Download progress 0-100 (only meaningful while `downloading`) */
+  /** Download progress 0-100 (also retained after a failed download) */
   progressPercent?: number
   bytesPerSecond?: number
   releaseNotes?: string
