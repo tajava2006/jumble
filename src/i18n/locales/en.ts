@@ -1152,6 +1152,7 @@ export default {
       'If you forgot the password, you can reset the encrypted data. This permanently deletes all stored login sessions and private keys on this device. This cannot be undone.',
     'Copy link': 'Copy link',
     'Link previews': 'Link previews',
-    'Show previews for links in notes': 'Show previews for links in notes'
+    'Show previews for links in notes': 'Show previews for links in notes',
+    'Avatar image must be {{size}} MB or smaller': 'Avatar image must be {{size}} MB or smaller'
   }
 }

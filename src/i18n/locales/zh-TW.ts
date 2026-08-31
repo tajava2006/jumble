@@ -1119,6 +1119,7 @@ export default {
       '如果你忘記密碼，可以重設加密資料。這將永久刪除此裝置上儲存的所有登入工作階段和私鑰，且無法復原。',
     'Copy link': '複製連結',
     'Link previews': '連結預覽',
-    'Show previews for links in notes': '顯示貼文中的連結預覽'
+    'Show previews for links in notes': '顯示貼文中的連結預覽',
+    'Avatar image must be {{size}} MB or smaller': '頭像圖片不得超過 {{size}} MB'
   }
 }

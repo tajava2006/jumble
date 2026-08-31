@@ -1166,6 +1166,8 @@ export default {
       'Se você esqueceu a senha, pode redefinir os dados criptografados. Isso exclui permanentemente todas as sessões de login e chaves privadas salvas neste dispositivo. Esta ação não pode ser desfeita.',
     'Copy link': 'Copiar link',
     'Link previews': 'Pré-visualizações de links',
-    'Show previews for links in notes': 'Mostrar pré-visualizações de links nas notas'
+    'Show previews for links in notes': 'Mostrar pré-visualizações de links nas notas',
+    'Avatar image must be {{size}} MB or smaller':
+      'A imagem do avatar deve ter no máximo {{size}} MB'
   }
 }

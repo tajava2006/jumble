@@ -1164,6 +1164,7 @@ export default {
       'Parolayı unuttuysanız şifrelenmiş verileri sıfırlayabilirsiniz. Bu, cihazda saklanan tüm oturumları ve özel anahtarları kalıcı olarak siler. Bu işlem geri alınamaz.',
     'Copy link': 'Bağlantıyı kopyala',
     'Link previews': 'Bağlantı önizlemeleri',
-    'Show previews for links in notes': 'Notlardaki bağlantıların önizlemelerini göster'
+    'Show previews for links in notes': 'Notlardaki bağlantıların önizlemelerini göster',
+    'Avatar image must be {{size}} MB or smaller': 'Avatar görseli en fazla {{size}} MB olmalıdır'
   }
 }

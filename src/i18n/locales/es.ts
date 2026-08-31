@@ -1167,6 +1167,8 @@ export default {
       'Si olvidaste la contraseña, puedes restablecer los datos cifrados. Esto elimina permanentemente todas las sesiones de inicio y claves privadas guardadas en este dispositivo. Esta acción no se puede deshacer.',
     'Copy link': 'Copiar enlace',
     'Link previews': 'Vistas previas de enlaces',
-    'Show previews for links in notes': 'Mostrar vistas previas de enlaces en las notas'
+    'Show previews for links in notes': 'Mostrar vistas previas de enlaces en las notas',
+    'Avatar image must be {{size}} MB or smaller':
+      'La imagen del avatar debe tener un tamaño máximo de {{size}} MB'
   }
 }

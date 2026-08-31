@@ -1171,6 +1171,8 @@ export default {
       'Jeśli nie pamiętasz hasła, możesz zresetować zaszyfrowane dane. Spowoduje to trwałe usunięcie wszystkich zapisanych sesji logowania i kluczy prywatnych na tym urządzeniu. Tej operacji nie można cofnąć.',
     'Copy link': 'Kopiuj link',
     'Link previews': 'Podglądy linków',
-    'Show previews for links in notes': 'Pokazuj podglądy linków w notatkach'
+    'Show previews for links in notes': 'Pokazuj podglądy linków w notatkach',
+    'Avatar image must be {{size}} MB or smaller':
+      'Obraz awatara nie może być większy niż {{size}} MB'
   }
 }
