@@ -190,6 +190,7 @@ export const ALLOWED_FILTER_KINDS = [
 export const SUPPORTED_KINDS = [
   ...ALLOWED_FILTER_KINDS,
   ExtendedKind.RELAY_REVIEW,
+  ExtendedKind.FAVORITE_RELAYS,
   kinds.Emojisets,
   ExtendedKind.FOLLOW_PACK,
   kinds.Reaction,
