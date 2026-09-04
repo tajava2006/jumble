@@ -24,6 +24,11 @@ class ElectronWebSocket extends WebSocket {
         'User-Agent': USER_AGENT
       }
     })
+
+    // nostr-tools clears onerror immediately after closing a connecting socket,
+    // but ws emits that error asynchronously. Keep a listener so it does not
+    // become an uncaught exception in the Electron main process.
+    this.on('error', () => {})
   }
 }
 
